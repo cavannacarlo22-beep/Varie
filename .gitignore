@@ -1,0 +1,10 @@
+# Python bytecode from the skill's search scripts
+__pycache__/
+*.py[cod]
+
+# Packaged skill bundles produced by scripts/package-skills.sh
+/dist/
+
+# OS noise
+.DS_Store
+Thumbs.db
