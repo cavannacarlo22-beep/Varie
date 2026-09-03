@@ -1,5 +1,9 @@
 # UI/UX Pro Max — installazione e uso in qualsiasi cartella
 
+> **Nota:** questo repository contiene anche il **sito vetrina di Carlo Cavanna**
+> (`index.html` + `assets/`), sul branch `claude/carlo-cavanna-showcase-site-dcc7ra`.
+> Per pubblicarlo online leggi **[DEPLOY.md](DEPLOY.md)**.
+
 Questo repo contiene il bundle di skill [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
 (v2.13.0) e gli script per renderlo disponibile **in ogni cartella, in ogni sessione**.
 
