@@ -1,0 +1,310 @@
+{
+  "palette": {
+    "azzurro": {
+      "name": "Azzurro Nube",
+      "hex": "#A9D9EE"
+    },
+    "ghiaccio": {
+      "name": "Celeste Ghiaccio",
+      "hex": "#DCEEF7"
+    },
+    "panna": {
+      "name": "Panna",
+      "hex": "#F1E7DA"
+    },
+    "sabbia": {
+      "name": "Sabbia",
+      "hex": "#E0CBB0"
+    },
+    "notte": {
+      "name": "Blu Notte",
+      "hex": "#2C3E56"
+    },
+    "cipria": {
+      "name": "Rosa Cipria",
+      "hex": "#EBD2D2"
+    },
+    "salvia": {
+      "name": "Verde Salvia",
+      "hex": "#C3D3C2"
+    },
+    "perla": {
+      "name": "Grigio Perla",
+      "hex": "#D8D9E0"
+    }
+  },
+  "products": [
+    {
+      "slug": "aurora",
+      "name": "Aurora",
+      "shape": "busta",
+      "stitch": "basso",
+      "hardware": "oro",
+      "tagline": "Clutch a busta lavorata a punto basso, fitta e compatta.",
+      "material": "Cotone egiziano n.8, fodera in cotone, chiusura calamitata",
+      "yarn": "Punto basso · uncinetto 2,5 mm",
+      "category": "sera",
+      "badge": "Best seller",
+      "story": "È la prima che ho disegnato. Il punto basso è lento — circa 9.000 punti per la Media — ma dà una superficie compatta che tiene la forma senza rinforzi.",
+      "sizes": [
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "20 × 12 cm",
+          "price": 62
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "26 × 15 cm",
+          "price": 84
+        }
+      ],
+      "colors": [
+        "azzurro",
+        "panna",
+        "notte",
+        "cipria"
+      ],
+      "photos": {}
+    },
+    {
+      "slug": "granny",
+      "name": "Granny",
+      "shape": "granny",
+      "stitch": "granny",
+      "hardware": "legno",
+      "tagline": "Quattro piastrelle granny square unite a mano, manico in legno.",
+      "material": "Cotone ritorto, manico in faggio, fodera in cotone a righe",
+      "yarn": "Granny square · uncinetto 3 mm",
+      "category": "giorno",
+      "badge": "",
+      "story": "Il granny square è il primo punto che mi ha insegnato mia nonna. Quattro piastrelle, unite una all'altra a punto basso: la cucitura resta a vista, ed è giusto così.",
+      "sizes": [
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "24 × 20 cm",
+          "price": 78
+        },
+        {
+          "id": "maxi",
+          "name": "Maxi",
+          "dim": "30 × 26 cm",
+          "price": 98
+        }
+      ],
+      "colors": [
+        "azzurro",
+        "panna",
+        "salvia",
+        "sabbia"
+      ],
+      "photos": {}
+    },
+    {
+      "slug": "conchiglia",
+      "name": "Conchiglia",
+      "shape": "mezzaluna",
+      "stitch": "ventaglio",
+      "hardware": "bambu",
+      "tagline": "Mezzaluna a punto ventaglio, con manico tondo in bambù.",
+      "material": "Cotone macramè 3 mm, manico in bambù, fodera in cotone",
+      "yarn": "Punto ventaglio · uncinetto 4 mm",
+      "category": "giorno",
+      "badge": "",
+      "story": "I ventagli si aprono seguendo la curva della mezzaluna, quindi vanno contati riga per riga: sbagli un punto e la borsa perde la forma.",
+      "sizes": [
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "22 × 14 cm",
+          "price": 72
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "28 × 17 cm",
+          "price": 92
+        }
+      ],
+      "colors": [
+        "azzurro",
+        "ghiaccio",
+        "sabbia",
+        "notte"
+      ],
+      "photos": {}
+    },
+    {
+      "slug": "nocciola",
+      "name": "Nocciola",
+      "shape": "puffy",
+      "stitch": "nocciolina",
+      "hardware": "argento",
+      "tagline": "Punto nocciolina in rilievo, morbida come un cuscino.",
+      "material": "Cotone morbido doppio filo, imbottitura leggera, catena removibile",
+      "yarn": "Punto nocciolina · uncinetto 3,5 mm",
+      "category": "giorno",
+      "badge": "",
+      "story": "Ogni nocciolina sono cinque mezze maglie alte chiuse insieme. Ce ne vogliono più di trecento per una borsa, e alla fine le dita se le ricordano.",
+      "sizes": [
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "24 × 16 cm",
+          "price": 86
+        },
+        {
+          "id": "maxi",
+          "name": "Maxi",
+          "dim": "30 × 20 cm",
+          "price": 108
+        }
+      ],
+      "colors": [
+        "azzurro",
+        "perla",
+        "salvia",
+        "cipria"
+      ],
+      "photos": {}
+    },
+    {
+      "slug": "rete",
+      "name": "Rete",
+      "shape": "onda",
+      "stitch": "rete",
+      "hardware": "oro",
+      "tagline": "Punto rete traforato su fodera a contrasto, che si intravede.",
+      "material": "Cotone fine n.12, fodera in raso di cotone a contrasto",
+      "yarn": "Punto rete filet · uncinetto 2 mm",
+      "category": "sera",
+      "badge": "Edizione limitata",
+      "story": "La rete lascia passare la luce e il colore della fodera. È la più difficile da fare: il filo è sottilissimo e non perdona un punto sbagliato.",
+      "sizes": [
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "22 × 13 cm",
+          "price": 96
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "27 × 15 cm",
+          "price": 118
+        }
+      ],
+      "colors": [
+        "azzurro",
+        "panna",
+        "notte",
+        "perla"
+      ],
+      "photos": {}
+    },
+    {
+      "slug": "perla",
+      "name": "Perla",
+      "shape": "pochette",
+      "stitch": "basso",
+      "hardware": "oro",
+      "tagline": "Mini pochette da sera, con manico di perle.",
+      "material": "Cotone lucido n.10, manico in perle di vetro, fodera in raso",
+      "yarn": "Punto basso a spirale · uncinetto 2 mm",
+      "category": "sera",
+      "badge": "Novità",
+      "story": "Lavorata a spirale, senza giro di chiusura: non c'è una cucitura visibile da nessuna parte. Entra un telefono, un rossetto e poco altro — è voluto.",
+      "sizes": [
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "17 × 11 cm",
+          "price": 58
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "21 × 13 cm",
+          "price": 74
+        }
+      ],
+      "colors": [
+        "azzurro",
+        "panna",
+        "cipria",
+        "perla"
+      ],
+      "photos": {}
+    },
+    {
+      "slug": "brezza",
+      "name": "Brezza",
+      "shape": "trapezio",
+      "stitch": "coste",
+      "hardware": "bambu",
+      "tagline": "Punto a coste verticali in fettuccia, tiene la forma da sola.",
+      "material": "Fettuccia di cotone riciclato, manico in bambù, fodera in lino",
+      "yarn": "Punto a coste · uncinetto 6 mm",
+      "category": "giorno",
+      "badge": "",
+      "story": "La fettuccia è grossa e la borsa cresce in fretta, ma le coste vanno tenute in tensione tutte uguali o la linea si storce.",
+      "sizes": [
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "26 × 18 cm",
+          "price": 88
+        },
+        {
+          "id": "maxi",
+          "name": "Maxi",
+          "dim": "32 × 21 cm",
+          "price": 112
+        }
+      ],
+      "colors": [
+        "sabbia",
+        "panna",
+        "azzurro",
+        "salvia"
+      ],
+      "photos": {}
+    },
+    {
+      "slug": "luna",
+      "name": "Luna",
+      "shape": "tonda",
+      "stitch": "basso",
+      "hardware": "legno",
+      "tagline": "Tonda, lavorata in tondo da un cerchio magico, anello in legno.",
+      "material": "Cotone ritorto doppio, anello in faggio, cerniera e fodera in cotone",
+      "yarn": "Punto basso in tondo · uncinetto 3 mm",
+      "category": "sera",
+      "badge": "",
+      "story": "Si parte da un cerchio magico al centro e si allarga a giri, aumentando sempre nello stesso punto. Due dischi identici, cuciti insieme sul bordo.",
+      "sizes": [
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "Ø 22 cm",
+          "price": 82
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "Ø 27 cm",
+          "price": 104
+        }
+      ],
+      "colors": [
+        "azzurro",
+        "notte",
+        "panna",
+        "perla"
+      ],
+      "photos": {}
+    }
+  ]
+}

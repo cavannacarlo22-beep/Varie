@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teresa Sardanelli — Clutch bag all’uncinetto | Borsette fatte a mano</title>
+<meta name="description" content="Clutch bag fatte a uncinetto da Teresa Sardanelli: cotone, fettuccia, granny square. Otto modelli in misure e colori diversi, da €58. Pezzi unici, spedizione in tutta Italia.">
+<meta name="author" content="Teresa Sardanelli">
+<meta name="theme-color" content="#A9D9EE">
+<link rel="canonical" href="{{SITE}}/">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Teresa Sardanelli">
+<meta property="og:title" content="Teresa Sardanelli — Clutch bag all’uncinetto">
+<meta property="og:description" content="Otto modelli di clutch lavorate a uncinetto, in misure e colori diversi. Da €58.">
+<meta property="og:url" content="{{SITE}}/">
+<meta property="og:image" content="{{SITE}}/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Teresa Sardanelli — Clutch bag all’uncinetto">
+<meta name="twitter:description" content="Otto modelli di clutch lavorate a uncinetto, in misure e colori diversi. Da €58.">
+<meta name="twitter:image" content="{{SITE}}/assets/img/og.jpg">
+
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/cormorant-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">{{JSONLD}}</script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ preloader -->
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="preloader__in">
+    <div class="preloader__name">{{PLNAME}}</div>
+    <div class="preloader__bar"><i id="plBar"></i></div>
+    <div class="preloader__num"><span id="plNum">0</span>%</div>
+  </div>
+</div>
+
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+<a class="btn btn--dark" href="#collezione" style="position:absolute;left:-9999px" onfocus="this.style.left='12px';this.style.top='12px';this.style.zIndex='9999'" onblur="this.style.left='-9999px'"><span>Vai alla collezione</span></a>
+
+<!-- ═══════════════════════════════════════════════════ header -->
+<header class="header" id="header">
+  <div class="header__in">
+    <a class="brand" href="#top" aria-label="Teresa Sardanelli, home">
+      <b>teresa sardanelli</b>
+      <small>clutch all’uncinetto</small>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Menu principale">
+      <a href="#collezione">Collezione</a>
+      <a href="#misure">Misure</a>
+      <a href="#atelier">Atelier</a>
+      <a href="#sumisura">Su misura</a>
+      <a href="#contatti">Contatti</a>
+    </nav>
+
+    <div class="header__act">
+      <button class="cartbtn" id="cartBtn" type="button" aria-label="Carrello, 0 articoli">
+        <span class="lab">Carrello</span>
+        <span class="cartbtn__n" id="cartN">0</span>
+      </button>
+      <button class="burger" id="burger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="nav"><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ═══════════════════════════════════════════════════ hero -->
+<section class="hero">
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <div class="wrap hero__grid">
+    <div>
+      <p class="eyebrow reveal">Atelier artigianale · Italia</p>
+      <h1 class="h-xxl split">Una clutch<br>alla volta,<br><span class="it">a uncinetto.</span></h1>
+      <p class="lead hero__sub reveal" style="--d:.25s">
+        Otto modelli, lavorati punto per punto da me con l’uncinetto. Cotone e fettuccia,
+        misure e colori diversi, nessun pezzo identico a un altro.
+      </p>
+      <div class="hero__cta reveal" style="--d:.4s">
+        <a class="btn btn--dark" href="#collezione" data-magnet><span>Scopri la collezione</span></a>
+        <a class="link" href="#sumisura">Voglio la mia su misura →</a>
+      </div>
+
+      <div class="hero__meta reveal" style="--d:.55s">
+        <div><b>8</b><span>Modelli</span></div>
+        <div><b>3</b><span>Misure</span></div>
+        <div><b>6</b><span>Punti</span></div>
+        <div><b>100%</b><span>Fatto a mano</span></div>
+      </div>
+    </div>
+
+    <div class="hero__stage" id="heroStage" style="--bag-lt:{{HERO_LT}};--bag:{{HERO_BASE}};--bag-dk:{{HERO_DK}}">
+      <div class="hero__ring" aria-hidden="true"></div>
+      <div class="hero__plate" aria-hidden="true" data-depth="-14"></div>
+      <div class="hero__bag" data-depth="26">{{HERO_BAG}}</div>
+      <span class="hero__tag hero__tag--1" data-depth="40">Cotone naturale</span>
+      <span class="hero__tag hero__tag--2" data-depth="34">Punto per punto</span>
+    </div>
+  </div>
+
+  <div class="scrollcue" aria-hidden="true"><i></i>Scorri</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ marquee -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__t">
+    <span>Pezzi unici</span><span>Lavorato a uncinetto in Italia</span><span>Spedizione gratuita da €120</span><span>Personalizzabile</span><span>Confezione regalo inclusa</span>
+    <span>Pezzi unici</span><span>Lavorato a uncinetto in Italia</span><span>Spedizione gratuita da €120</span><span>Personalizzabile</span><span>Confezione regalo inclusa</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ manifesto -->
+<section class="section manifesto" id="atelier">
+  <div class="wrap manifesto__grid">
+    <div>
+      <p class="eyebrow reveal">L'atelier</p>
+      <h2 class="h-xl split">Comincia sempre<br>da un gomitolo<br>e da un uncinetto.</h2>
+    </div>
+    <div>
+      <p class="big reveal" style="--d:.15s">
+        Ho imparato l’uncinetto da mia nonna, e uso ancora i suoi. Ogni clutch nasce così:
+        <em>un punto dopo l’altro</em>, contati a mano, sul divano di casa. Una borsa sono
+        migliaia di punti e qualche sera. Ci metto giorni, non minuti.
+      </p>
+      <p class="reveal" style="--d:.25s">
+        Non produco in serie e non tengo magazzino: quando ordini, prendo il gomitolo
+        del colore che hai scelto e comincio. Per questo puoi decidere misura, colore e
+        punto — e chiedermi anche qualcosa che in collezione non c’è.
+      </p>
+      <p class="signature reveal" style="--d:.3s">Teresa</p>
+
+      <div class="pillars">
+        <div class="pillar reveal" style="--d:.1s"><h3>Filati di cotone, mai acrilico</h3>
+          <p>Cotone egiziano, cotone ritorto, fettuccia di cotone riciclato. Ogni borsa è foderata a mano con tessuto di cotone o lino: non si deforma e non si vede dentro.</p></div>
+        <div class="pillar reveal" style="--d:.2s"><h3>10–14 giorni di lavorazione</h3>
+          <p>Il tempo che serve all’uncinetto per fare le cose per bene, fodera compresa. Ti scrivo quando comincio e ti mando la foto prima di spedire.</p></div>
+        <div class="pillar reveal" style="--d:.3s"><h3>Riparazioni gratuite per un anno</h3>
+          <p>Se un punto si apre o un manico si allenta, me la rimandi e la riprendo io. Le borse devono durare.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ collezione -->
+<section class="section collection" id="collezione">
+  <div class="wrap">
+    <div class="coll__head">
+      <div>
+        <p class="eyebrow reveal">La collezione</p>
+        <h2 class="h-xl split">Otto modelli.<br>Sei punti diversi.</h2>
+      </div>
+      <div class="filters reveal" style="--d:.2s" role="group" aria-label="Filtra la collezione">
+        <button class="chip" type="button" data-filter="tutte" aria-pressed="true">Tutte</button>
+        <button class="chip" type="button" data-filter="sera" aria-pressed="false">Da sera</button>
+        <button class="chip" type="button" data-filter="giorno" aria-pressed="false">Da giorno</button>
+      </div>
+    </div>
+
+    <div class="grid">
+{{CARDS}}
+    </div>
+
+    <p class="muted reveal" style="margin-top:2.5rem;font-size:.86rem">
+      Prezzi IVA inclusa. Spedizione €7 in tutta Italia, gratuita sopra €120.
+      Ogni borsa arriva foderata, in sacchetto di cotone e confezione regalo.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ misure -->
+<section class="section sizesec" id="misure">
+  <div class="wrap">
+    <p class="eyebrow reveal">Le misure</p>
+    <h2 class="h-xl split" style="max-width:16ch">Quanto grande<br>la vuoi?</h2>
+    <p class="lead reveal" style="--d:.2s;margin-top:1.2rem">
+      Ogni modello esiste in due misure. Se sei indecisa: la Media va bene per quasi tutte
+      le occasioni, la Mini è da sera, la Maxi ci sta anche un tablet piccolo. Le misure sono
+      quelle della borsa finita, a lavoro bloccato e foderato.
+    </p>
+
+    <div class="sizerow">
+      <div class="sizecard reveal" style="--d:.1s">
+        <div class="sizecard__box" style="width:96px;height:62px">MINI</div>
+        <h3>Mini</h3>
+        <p>Telefono, chiavi, rossetto. La misura da sera.</p>
+        <span class="dim">17–22 cm di larghezza</span>
+      </div>
+      <div class="sizecard reveal" style="--d:.2s">
+        <div class="sizecard__box" style="width:140px;height:82px">MEDIA</div>
+        <h3>Media</h3>
+        <p>Ci sta anche un portafoglio grande. La più richiesta.</p>
+        <span class="dim">21–28 cm di larghezza</span>
+      </div>
+      <div class="sizecard reveal" style="--d:.3s">
+        <div class="sizecard__box" style="width:180px;height:104px">MAXI</div>
+        <h3>Maxi</h3>
+        <p>Per chi porta tutto. Entra un tablet da 8 pollici.</p>
+        <span class="dim">30–32 cm di larghezza</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ su misura -->
+<section class="section" id="sumisura">
+  <div class="wrap">
+    <p class="eyebrow reveal">Su misura</p>
+    <h2 class="h-xl split" style="max-width:20ch">Non trovi il colore<br>o il punto giusto?</h2>
+    <p class="lead reveal" style="--d:.2s;margin-top:1.2rem">
+      Posso rifare qualsiasi modello nel filato e nel colore che preferisci, o combinare
+      il punto di una borsa con la forma di un’altra. Il sovrapprezzo è di €20.
+    </p>
+
+    <div class="steps">
+      <div class="step reveal" style="--d:.1s">
+        <div class="step__n">01</div>
+        <h3>Scrivimi</h3>
+        <p>Raccontami l’occasione e mandami una foto dell’abito o del colore. Rispondo entro 24 ore.</p>
+      </div>
+      <div class="step reveal" style="--d:.2s">
+        <div class="step__n">02</div>
+        <h3>Scegliamo insieme</h3>
+        <p>Ti mando le foto dei gomitoli che ho e un campione del punto, così vedi com’è dal vero.</p>
+      </div>
+      <div class="step reveal" style="--d:.3s">
+        <div class="step__n">03</div>
+        <h3>La lavoro per te</h3>
+        <p>Dieci-quattordici giorni di lavorazione, foto prima della spedizione, e parte.</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="--d:.35s;margin-top:2.5rem">
+      <a class="btn btn--sky" href="#contatti" data-magnet><span>Richiedi una borsa su misura</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ recensioni -->
+<section class="section" style="background:var(--sky-50)">
+  <div class="wrap">
+    <p class="eyebrow reveal">Dicono di me</p>
+    <h2 class="h-l split" style="margin-bottom:2.6rem">Chi l'ha portata</h2>
+    <div class="quotes">
+      <div class="quote reveal" style="--d:.1s">
+        <div class="quote__stars">★★★★★</div>
+        <p>«L’ho portata al matrimonio di mia sorella e me l’hanno chiesta in cinque. Dentro è foderata meglio di borse che ho pagato il triplo.»</p>
+        <cite>Giulia M. — Bari</cite>
+      </div>
+      <div class="quote reveal" style="--d:.2s">
+        <div class="quote__stars">★★★★★</div>
+        <p>«Teresa ha cercato il filato del colore giusto per due settimane, finché non era identico al vestito. Pazienza infinita.»</p>
+        <cite>Federica R. — Milano</cite>
+      </div>
+      <div class="quote reveal" style="--d:.3s">
+        <div class="quote__stars">★★★★★</div>
+        <p>«La Brezza in fettuccia è diventata la mia borsa dell’estate. Tiene la forma da sola e dopo tre mesi è ancora come nuova.»</p>
+        <cite>Anna P. — Lecce</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ faq -->
+<section class="section" id="faq">
+  <div class="wrap" style="max-width:900px">
+    <p class="eyebrow reveal">Domande frequenti</p>
+    <h2 class="h-l split" style="margin-bottom:2rem">Prima di ordinare</h2>
+    <div class="acc">{{FAQ}}</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ contatti -->
+<section class="section contact" id="contatti">
+  <div class="wrap contact__grid">
+    <div>
+      <p class="eyebrow reveal">Contatti</p>
+      <h2 class="h-xl split">Parliamone.</h2>
+      <p class="lead reveal" style="--d:.2s;margin-top:1rem">
+        Scrivimi per un ordine su misura, per un consiglio sulla misura giusta
+        o solo per chiedermi se un filato esiste in quel colore. Rispondo io, sempre.
+      </p>
+      <div class="contactlist">
+        <a class="reveal" style="--d:.25s" href="mailto:{{EMAIL}}">
+          <div><b>{{EMAIL}}</b><span>Email</span></div>
+        </a>
+        <a class="reveal" style="--d:.3s" href="https://instagram.com/{{IG}}" target="_blank" rel="noopener">
+          <div><b>@{{IG}}</b><span>Instagram</span></div>
+        </a>
+      </div>
+    </div>
+
+    <form class="form reveal" id="contactForm" style="--d:.3s">
+      <div class="field">
+        <label for="f-nome">Nome e cognome</label>
+        <input id="f-nome" name="nome" type="text" required autocomplete="name" placeholder="Come ti chiami">
+      </div>
+      <div class="field">
+        <label for="f-email">Email</label>
+        <input id="f-email" name="email" type="email" required autocomplete="email" placeholder="Dove ti rispondo">
+      </div>
+      <div class="field">
+        <label for="f-mod">Modello di interesse</label>
+        <select id="f-mod" name="modello">
+          <option>Non lo so ancora</option>
+{{SELECT}}
+          <option>Un modello tutto mio (su misura)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-msg">Messaggio</label>
+        <textarea id="f-msg" name="messaggio" required placeholder="Raccontami cosa hai in mente: occasione, colore, misura, punto…"></textarea>
+      </div>
+      <button class="btn btn--dark btn--wide" type="submit"><span>Invia il messaggio</span></button>
+      <p class="form__note">Il modulo apre il tuo programma di posta con il messaggio già scritto. Nessun dato viene salvato su questo sito.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════ footer -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div>
+        <a class="brand" href="#top"><b>teresa sardanelli</b><small>clutch all’uncinetto</small></a>
+        <p style="margin-top:1.2rem;max-width:34ch;font-size:.93rem">
+          Borsette da sera e da giorno, lavorate a uncinetto in Italia. Pezzi unici, mai due uguali.
+        </p>
+      </div>
+      <div>
+        <h4>Naviga</h4>
+        <ul>
+          <li><a href="#collezione">Collezione</a></li>
+          <li><a href="#misure">Guida alle misure</a></li>
+          <li><a href="#atelier">L'atelier</a></li>
+          <li><a href="#sumisura">Su misura</a></li>
+          <li><a href="#faq">Domande frequenti</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contatti</h4>
+        <ul>
+          <li><a href="mailto:{{EMAIL}}">{{EMAIL}}</a></li>
+          <li><a href="https://instagram.com/{{IG}}" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="#contatti">Ordini su misura</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bot">
+      <span>© <span id="year">2026</span> Teresa Sardanelli — Tutti i diritti riservati</span>
+      <span>Fatto a mano, sito compreso.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════ quick view -->
+<div class="sheet" id="pv" role="dialog" aria-modal="true" aria-labelledby="pvName">
+  <div class="sheet__bg" data-close></div>
+  <div class="pv__panel">
+    <button class="x" type="button" data-close aria-label="Chiudi"></button>
+    <div class="pv__grid">
+      <div class="pv__media" id="pvMedia"></div>
+      <div class="pv__body">
+        <div>
+          <h2 id="pvName">—</h2>
+          <p class="muted" id="pvTag" style="margin:.5rem 0 0"></p>
+        </div>
+        <div class="pv__price" id="pvPrice">—</div>
+        <p class="pv__story" id="pvStory"></p>
+
+        <div class="opt">
+          <div class="opt__lab"><span>Misura</span><b id="pvSizeName"></b></div>
+          <div class="opt__row" id="pvSizes"></div>
+        </div>
+        <div class="opt">
+          <div class="opt__lab"><span>Colore</span><b id="pvColorName"></b></div>
+          <div class="opt__row" id="pvColors"></div>
+        </div>
+
+        <div class="pv__buy">
+          <div class="qty">
+            <button type="button" id="pvMinus" aria-label="Riduci quantità">−</button>
+            <span id="pvQty">1</span>
+            <button type="button" id="pvPlus" aria-label="Aumenta quantità">+</button>
+          </div>
+          <button class="btn btn--dark" type="button" id="pvAdd"><span>Aggiungi al carrello</span></button>
+        </div>
+
+        <dl class="pv__spec">
+          <div><dt>Dimensioni</dt><dd id="pvDim"></dd></div>
+          <div><dt>Lavorazione</dt><dd id="pvYarn"></dd></div>
+          <div><dt>Filato e fodera</dt><dd id="pvMat"></dd></div>
+          <div><dt>Tempi</dt><dd>Lavorata su ordinazione in 10–14 giorni lavorativi</dd></div>
+          <div><dt>Spedizione</dt><dd>€7 in Italia, gratuita sopra €120. Tracciata.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ carrello -->
+<div class="sheet" id="cart" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+  <div class="sheet__bg" data-close></div>
+  <aside class="cart__panel">
+    <div class="cart__head">
+      <h2 id="cartTitle">Il tuo carrello</h2>
+      <button class="x" type="button" data-close aria-label="Chiudi il carrello" style="position:static"></button>
+    </div>
+    <div class="cart__items" id="cartItems"></div>
+    <div class="cart__foot" id="cartFoot" hidden>
+      <div style="display:flex;justify-content:space-between;font-size:.9rem;color:var(--ink-2)">
+        <span>Subtotale</span><span id="cartSub">€0</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.9rem;color:var(--ink-2)">
+        <span>Spedizione</span><span id="cartShip">€7</span>
+      </div>
+      <div class="cart__tot"><span>Totale</span><span id="cartTot">€0</span></div>
+      <button class="btn btn--dark btn--wide" type="button" id="checkout"><span>Completa l'ordine</span></button>
+      <p class="cart__note" id="cartHint"></p>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/assets/js/products.js"></script>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>
