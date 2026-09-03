@@ -1,110 +1,310 @@
 {
   "palette": {
-    "azzurro":  { "name": "Azzurro Nube",    "hex": "#A9D9EE" },
-    "ghiaccio": { "name": "Celeste Ghiaccio","hex": "#DCEEF7" },
-    "avorio":   { "name": "Avorio",          "hex": "#F1E7DA" },
-    "sabbia":   { "name": "Sabbia",          "hex": "#E0CBB0" },
-    "notte":    { "name": "Blu Notte",       "hex": "#2C3E56" },
-    "cipria":   { "name": "Rosa Cipria",     "hex": "#EBD2D2" },
-    "salvia":   { "name": "Verde Salvia",    "hex": "#C3D3C2" },
-    "perla":    { "name": "Grigio Perla",    "hex": "#D8D9E0" }
+    "azzurro": {
+      "name": "Azzurro Nube",
+      "hex": "#A9D9EE"
+    },
+    "ghiaccio": {
+      "name": "Celeste Ghiaccio",
+      "hex": "#DCEEF7"
+    },
+    "panna": {
+      "name": "Panna",
+      "hex": "#F1E7DA"
+    },
+    "sabbia": {
+      "name": "Sabbia",
+      "hex": "#E0CBB0"
+    },
+    "notte": {
+      "name": "Blu Notte",
+      "hex": "#2C3E56"
+    },
+    "cipria": {
+      "name": "Rosa Cipria",
+      "hex": "#EBD2D2"
+    },
+    "salvia": {
+      "name": "Verde Salvia",
+      "hex": "#C3D3C2"
+    },
+    "perla": {
+      "name": "Grigio Perla",
+      "hex": "#D8D9E0"
+    }
   },
   "products": [
     {
-      "slug": "aurora", "name": "Aurora", "shape": "busta", "hardware": "oro",
-      "tagline": "Clutch a busta in seta duchesse, cucita e rifinita a mano.",
-      "material": "Seta duchesse su base rigida, fodera in raso di cotone",
-      "category": "sera", "badge": "Best seller",
-      "story": "La prima borsa che ho disegnato. La piega della patta è ottenuta a mano, una alla volta: per questo non ce ne sono due identiche.",
+      "slug": "aurora",
+      "name": "Aurora",
+      "shape": "busta",
+      "stitch": "basso",
+      "hardware": "oro",
+      "tagline": "Clutch a busta lavorata a punto basso, fitta e compatta.",
+      "material": "Cotone egiziano n.8, fodera in cotone, chiusura calamitata",
+      "yarn": "Punto basso · uncinetto 2,5 mm",
+      "category": "sera",
+      "badge": "Best seller",
+      "story": "È la prima che ho disegnato. Il punto basso è lento — circa 9.000 punti per la Media — ma dà una superficie compatta che tiene la forma senza rinforzi.",
       "sizes": [
-        { "id": "mini",  "name": "Mini",  "dim": "20 × 12 × 4 cm", "price": 95 },
-        { "id": "media", "name": "Media", "dim": "26 × 15 × 5 cm", "price": 125 }
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "20 × 12 cm",
+          "price": 62
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "26 × 15 cm",
+          "price": 84
+        }
       ],
-      "colors": ["azzurro", "avorio", "notte", "cipria"]
+      "colors": [
+        "azzurro",
+        "panna",
+        "notte",
+        "cipria"
+      ],
+      "photos": {}
     },
     {
-      "slug": "marea", "name": "Marea", "shape": "mezzaluna", "hardware": "oro",
-      "tagline": "Mezzaluna con manico rigido dorato, in raso di seta.",
-      "material": "Raso di seta, manico in ottone dorato, fodera in raso",
-      "category": "giorno", "badge": "",
-      "story": "Il manico è modellato a caldo su una forma di legno che uso da anni. La curva del corpo segue la linea del polso.",
+      "slug": "granny",
+      "name": "Granny",
+      "shape": "granny",
+      "stitch": "granny",
+      "hardware": "legno",
+      "tagline": "Quattro piastrelle granny square unite a mano, manico in legno.",
+      "material": "Cotone ritorto, manico in faggio, fodera in cotone a righe",
+      "yarn": "Granny square · uncinetto 3 mm",
+      "category": "giorno",
+      "badge": "",
+      "story": "Il granny square è il primo punto che mi ha insegnato mia nonna. Quattro piastrelle, unite una all'altra a punto basso: la cucitura resta a vista, ed è giusto così.",
       "sizes": [
-        { "id": "mini",  "name": "Mini",  "dim": "22 × 13 × 6 cm", "price": 110 },
-        { "id": "media", "name": "Media", "dim": "28 × 16 × 7 cm", "price": 145 }
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "24 × 20 cm",
+          "price": 78
+        },
+        {
+          "id": "maxi",
+          "name": "Maxi",
+          "dim": "30 × 26 cm",
+          "price": 98
+        }
       ],
-      "colors": ["azzurro", "ghiaccio", "sabbia", "notte"]
+      "colors": [
+        "azzurro",
+        "panna",
+        "salvia",
+        "sabbia"
+      ],
+      "photos": {}
     },
     {
-      "slug": "nuvola", "name": "Nuvola", "shape": "puffy", "hardware": "argento",
-      "tagline": "Trapuntata a mano, morbida, leggerissima da portare.",
-      "material": "Nylon trapuntato imbottito, catena removibile in acciaio",
-      "category": "giorno", "badge": "",
-      "story": "Ogni rombo della trapuntatura è cucito a macchina guidata a mano. Ci vogliono circa tre ore per borsa.",
+      "slug": "conchiglia",
+      "name": "Conchiglia",
+      "shape": "mezzaluna",
+      "stitch": "ventaglio",
+      "hardware": "bambu",
+      "tagline": "Mezzaluna a punto ventaglio, con manico tondo in bambù.",
+      "material": "Cotone macramè 3 mm, manico in bambù, fodera in cotone",
+      "yarn": "Punto ventaglio · uncinetto 4 mm",
+      "category": "giorno",
+      "badge": "",
+      "story": "I ventagli si aprono seguendo la curva della mezzaluna, quindi vanno contati riga per riga: sbagli un punto e la borsa perde la forma.",
       "sizes": [
-        { "id": "media", "name": "Media", "dim": "24 × 16 × 8 cm", "price": 120 },
-        { "id": "maxi",  "name": "Maxi",  "dim": "30 × 20 × 9 cm", "price": 150 }
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "22 × 14 cm",
+          "price": 72
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "28 × 17 cm",
+          "price": 92
+        }
       ],
-      "colors": ["azzurro", "perla", "salvia", "cipria"]
+      "colors": [
+        "azzurro",
+        "ghiaccio",
+        "sabbia",
+        "notte"
+      ],
+      "photos": {}
     },
     {
-      "slug": "sirena", "name": "Sirena", "shape": "perline", "hardware": "argento",
-      "tagline": "Ricamata a mano con migliaia di perline di vetro.",
-      "material": "Perline di vetro cucite una a una su tela, catena in acciaio",
-      "category": "sera", "badge": "Edizione limitata",
-      "story": "Circa 9.000 perline per borsa e due settimane di lavoro. Ne realizzo solo poche all'anno.",
+      "slug": "nocciola",
+      "name": "Nocciola",
+      "shape": "puffy",
+      "stitch": "nocciolina",
+      "hardware": "argento",
+      "tagline": "Punto nocciolina in rilievo, morbida come un cuscino.",
+      "material": "Cotone morbido doppio filo, imbottitura leggera, catena removibile",
+      "yarn": "Punto nocciolina · uncinetto 3,5 mm",
+      "category": "giorno",
+      "badge": "",
+      "story": "Ogni nocciolina sono cinque mezze maglie alte chiuse insieme. Ce ne vogliono più di trecento per una borsa, e alla fine le dita se le ricordano.",
       "sizes": [
-        { "id": "mini",  "name": "Mini",  "dim": "19 × 11 × 5 cm", "price": 165 },
-        { "id": "media", "name": "Media", "dim": "24 × 14 × 6 cm", "price": 195 }
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "24 × 16 cm",
+          "price": 86
+        },
+        {
+          "id": "maxi",
+          "name": "Maxi",
+          "dim": "30 × 20 cm",
+          "price": 108
+        }
       ],
-      "colors": ["azzurro", "ghiaccio", "perla", "notte"]
+      "colors": [
+        "azzurro",
+        "perla",
+        "salvia",
+        "cipria"
+      ],
+      "photos": {}
     },
     {
-      "slug": "onda", "name": "Onda", "shape": "onda", "hardware": "oro",
-      "tagline": "Linea a onda, senza chiusure a vista. Pura silhouette.",
-      "material": "Ecopelle setosa su struttura leggera, fodera in microfibra",
-      "category": "giorno", "badge": "",
-      "story": "Nasce da uno scarto di modello: la curva era sbagliata, ma era bellissima. L'ho tenuta.",
+      "slug": "rete",
+      "name": "Rete",
+      "shape": "onda",
+      "stitch": "rete",
+      "hardware": "oro",
+      "tagline": "Punto rete traforato su fodera a contrasto, che si intravede.",
+      "material": "Cotone fine n.12, fodera in raso di cotone a contrasto",
+      "yarn": "Punto rete filet · uncinetto 2 mm",
+      "category": "sera",
+      "badge": "Edizione limitata",
+      "story": "La rete lascia passare la luce e il colore della fodera. È la più difficile da fare: il filo è sottilissimo e non perdona un punto sbagliato.",
       "sizes": [
-        { "id": "media", "name": "Media", "dim": "27 × 13 × 5 cm", "price": 115 },
-        { "id": "maxi",  "name": "Maxi",  "dim": "32 × 15 × 6 cm", "price": 140 }
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "22 × 13 cm",
+          "price": 96
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "27 × 15 cm",
+          "price": 118
+        }
       ],
-      "colors": ["azzurro", "avorio", "sabbia", "salvia"]
+      "colors": [
+        "azzurro",
+        "panna",
+        "notte",
+        "perla"
+      ],
+      "photos": {}
     },
     {
-      "slug": "perla", "name": "Perla", "shape": "pochette", "hardware": "oro",
-      "tagline": "Mini pochette da sera con chiusura a perla e catena di perle.",
-      "material": "Raso opaco, chiusura in madreperla, catena di perle coltivate",
-      "category": "sera", "badge": "Novità",
-      "story": "La chiusura è una perla vera, scelta una per una. Entra un telefono, un rossetto e poco altro: è voluto.",
+      "slug": "perla",
+      "name": "Perla",
+      "shape": "pochette",
+      "stitch": "basso",
+      "hardware": "oro",
+      "tagline": "Mini pochette da sera, con manico di perle.",
+      "material": "Cotone lucido n.10, manico in perle di vetro, fodera in raso",
+      "yarn": "Punto basso a spirale · uncinetto 2 mm",
+      "category": "sera",
+      "badge": "Novità",
+      "story": "Lavorata a spirale, senza giro di chiusura: non c'è una cucitura visibile da nessuna parte. Entra un telefono, un rossetto e poco altro — è voluto.",
       "sizes": [
-        { "id": "mini",  "name": "Mini",  "dim": "16 × 10 × 4 cm", "price": 85 },
-        { "id": "media", "name": "Media", "dim": "21 × 12 × 5 cm", "price": 105 }
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "17 × 11 cm",
+          "price": 58
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "21 × 13 cm",
+          "price": 74
+        }
       ],
-      "colors": ["azzurro", "avorio", "cipria", "perla"]
+      "colors": [
+        "azzurro",
+        "panna",
+        "cipria",
+        "perla"
+      ],
+      "photos": {}
     },
     {
-      "slug": "brezza", "name": "Brezza", "shape": "rafia", "hardware": "oro",
-      "tagline": "Rafia naturale intrecciata a mano, per l'estate.",
-      "material": "Rafia naturale intrecciata, manico in bambù, fodera in lino",
-      "category": "giorno", "badge": "",
-      "story": "Intreccio la rafia partendo dal fondo, in un pezzo unico. È il modello che mi porta via più tempo.",
+      "slug": "brezza",
+      "name": "Brezza",
+      "shape": "trapezio",
+      "stitch": "coste",
+      "hardware": "bambu",
+      "tagline": "Punto a coste verticali in fettuccia, tiene la forma da sola.",
+      "material": "Fettuccia di cotone riciclato, manico in bambù, fodera in lino",
+      "yarn": "Punto a coste · uncinetto 6 mm",
+      "category": "giorno",
+      "badge": "",
+      "story": "La fettuccia è grossa e la borsa cresce in fretta, ma le coste vanno tenute in tensione tutte uguali o la linea si storce.",
       "sizes": [
-        { "id": "media", "name": "Media", "dim": "26 × 17 × 7 cm", "price": 130 },
-        { "id": "maxi",  "name": "Maxi",  "dim": "32 × 20 × 8 cm", "price": 160 }
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "26 × 18 cm",
+          "price": 88
+        },
+        {
+          "id": "maxi",
+          "name": "Maxi",
+          "dim": "32 × 21 cm",
+          "price": 112
+        }
       ],
-      "colors": ["sabbia", "avorio", "azzurro", "salvia"]
+      "colors": [
+        "sabbia",
+        "panna",
+        "azzurro",
+        "salvia"
+      ],
+      "photos": {}
     },
     {
-      "slug": "luna", "name": "Luna", "shape": "tonda", "hardware": "oro",
-      "tagline": "Tonda, rigida, con anello dorato. Un piccolo oggetto.",
-      "material": "Struttura rigida rivestita in raso, anello in ottone dorato",
-      "category": "sera", "badge": "",
-      "story": "È la borsa che regalo più spesso. La forma tonda costringe a portare solo l'essenziale.",
+      "slug": "luna",
+      "name": "Luna",
+      "shape": "tonda",
+      "stitch": "basso",
+      "hardware": "legno",
+      "tagline": "Tonda, lavorata in tondo da un cerchio magico, anello in legno.",
+      "material": "Cotone ritorto doppio, anello in faggio, cerniera e fodera in cotone",
+      "yarn": "Punto basso in tondo · uncinetto 3 mm",
+      "category": "sera",
+      "badge": "",
+      "story": "Si parte da un cerchio magico al centro e si allarga a giri, aumentando sempre nello stesso punto. Due dischi identici, cuciti insieme sul bordo.",
       "sizes": [
-        { "id": "mini",  "name": "Mini",  "dim": "Ø 22 × 6 cm", "price": 135 },
-        { "id": "media", "name": "Media", "dim": "Ø 27 × 7 cm", "price": 165 }
+        {
+          "id": "mini",
+          "name": "Mini",
+          "dim": "Ø 22 cm",
+          "price": 82
+        },
+        {
+          "id": "media",
+          "name": "Media",
+          "dim": "Ø 27 cm",
+          "price": 104
+        }
       ],
-      "colors": ["azzurro", "notte", "avorio", "perla"]
+      "colors": [
+        "azzurro",
+        "notte",
+        "panna",
+        "perla"
+      ],
+      "photos": {}
     }
   ]
 }

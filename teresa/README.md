@@ -1,10 +1,11 @@
-# Teresa Sardanelli — clutch bag fatte a mano
+# Teresa Sardanelli — clutch bag all'uncinetto
 
-Sito e-commerce vetrina per clutch artigianali. Statico, senza framework e senza
-build in produzione: 8 modelli, 3 misure, 8 colori, carrello con ordine via
-WhatsApp o email.
+Sito e-commerce vetrina per borsette lavorate a uncinetto. Statico, senza framework
+e senza build in produzione: 8 modelli, 6 punti, 2 misure per modello, 8 colori di
+filato, carrello con ordine via WhatsApp o email.
 
-**Per pubblicarlo online → leggi [DEPLOY.md](DEPLOY.md).**
+- **Per pubblicarlo online → [DEPLOY.md](DEPLOY.md)**
+- **Per sostituire i disegni con le tue foto → [FOTO.md](FOTO.md)** ← comincia da qui
 
 ---
 
@@ -21,13 +22,14 @@ teresa/
 │   ├── fonts/              ← Cormorant + Jost, self-hostati
 │   └── img/                ← favicon, icona, immagine social
 ├── scripts/
-│   ├── products.json       ← ⭐ IL CATALOGO: prezzi, misure, colori
-│   ├── bags.py             ← disegna le illustrazioni SVG delle borse
+│   ├── products.json       ← ⭐ IL CATALOGO: prezzi, misure, colori, FOTO
+│   ├── bags.py             ← disegna le borse in SVG (punti a uncinetto)
 │   ├── template.html       ← i testi delle pagine
 │   └── build.py            ← genera index.html + products.js
 ├── vercel.json             ← cache e header di sicurezza
 ├── robots.txt / sitemap.xml
-└── DEPLOY.md               ← guida per andare online
+├── DEPLOY.md               ← guida per andare online
+└── FOTO.md                 ← come fotografare le borse e metterle sul sito
 ```
 
 Peso della home: ~68 kB di HTML, ~20 kB fra CSS e JS, più i font (~130 kB).
@@ -69,41 +71,36 @@ Le sfumature chiara e scura vengono calcolate da sole: basta il colore base.
 
 ### Aggiungere un modello nuovo
 Copia un blocco esistente dentro `products`, cambia `slug` (deve essere unico,
-minuscolo, senza spazi) e i testi. Il campo `shape` sceglie il disegno della borsa
-fra: `busta`, `mezzaluna`, `puffy`, `perline`, `onda`, `pochette`, `rafia`, `tonda`.
-`hardware` può essere `oro` o `argento`, `category` può essere `sera` o `giorno`.
+minuscolo, senza spazi) e i testi. Il campo `shape` sceglie la forma
+fra `busta`, `mezzaluna`, `puffy`, `granny`, `onda`, `pochette`, `trapezio`, `tonda`;
+`stitch` sceglie il punto fra `basso`, `granny`, `ventaglio`, `nocciolina`, `rete`,
+`coste`; `hardware` è il manico, fra `legno`, `bambu`, `oro`, `argento`.
+`category` può essere `sera` o `giorno`.
 
 ---
 
-## Mettere le foto vere al posto dei disegni
+## Le foto (importante)
 
-Le borse in pagina sono **illustrazioni vettoriali**, disegnate su misura per questo
-sito: si ricolorano dal vivo quando si clicca una pastiglia colore, pesano pochissimo
-e restano nitide su qualsiasi schermo. Non sono fotografie delle borse reali.
+Le borse che si vedono adesso sono **disegni vettoriali**, non fotografie. Riproducono
+il punto (basso, granny square, ventaglio, nocciolina, rete, coste), la forma e il
+colore del filato, e si ricolorano dal vivo quando si clicca una pastiglia — ma restano
+disegni. Per vendere davvero servono le foto delle borse vere.
 
-Quando avrai le foto vere, il passaggio è semplice:
-
-1. Metti le immagini in `assets/img/products/` — quadrate, almeno 1000 × 1000 px,
-   sfondo chiaro e uniforme, la borsa centrata. Rinominale con nomi semplici
-   (`aurora-azzurro.jpg`).
-2. In `products.json`, dentro il modello, aggiungi la riga `photo`:
+Il sito è costruito per passare alle foto **una alla volta**, senza toccare il codice:
 
 ```json
-{
-  "slug": "aurora",
-  "photo": "aurora-azzurro.jpg",
-  ...
+"colors": ["azzurro", "panna", "notte", "cipria"],
+"photos": {
+  "azzurro": "aurora-azzurro.jpg",
+  "notte":   "aurora-notte.jpg"
 }
 ```
 
-3. Rigenera con `python3 scripts/build.py`.
+Colore con foto → si vede la foto. Colore senza foto → si vede il disegno, nel filato
+giusto. Vale per la scheda, per la finestra di dettaglio e per il carrello.
 
-La scheda userà la fotografia al posto del disegno. Attenzione: con la foto il
-cambio colore dal vivo non funziona più su quel modello (una foto non si ricolora),
-quindi conviene passare alle foto quando ne avrai una per ogni combinazione,
-oppure tenere i disegni per i modelli con tante varianti.
-
----
+Le istruzioni complete — come scattarle col telefono, come ridimensionarle, dove
+metterle — sono in **[FOTO.md](FOTO.md)**.
 
 ## Modificare i testi
 
@@ -133,6 +130,7 @@ Stripe o Shopify Lite senza rifare il resto.
 ## Accessibilità e prestazioni
 
 - Contrasti conformi a WCAG AA, focus visibile su tutti gli elementi interattivi.
+- Schede prodotto apribili anche da touch, senza dipendere dall'hover.
 - Modali con `aria-modal`, focus intrappolato e chiusura con `Esc`.
 - Tutte le animazioni si disattivano con *Riduci movimento* del sistema operativo.
 - Font self-hostati con `font-display: swap`: nessuna chiamata a server esterni.

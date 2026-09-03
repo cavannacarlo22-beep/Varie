@@ -15,7 +15,7 @@
     whatsapp: '',
     email: 'ciao@teresasardanelli.it',
     shipping: 7,          // costo spedizione in euro
-    freeFrom: 150,        // spedizione gratuita da questa cifra in su
+    freeFrom: 120,        // spedizione gratuita da questa cifra in su
     storeKey: 'ts-cart-v1'
   };
 
@@ -189,6 +189,23 @@
     el.style.setProperty('--bag', sw.dataset.base);
     el.style.setProperty('--bag-dk', sw.dataset.dk);
   }
+
+  // Ogni scheda contiene il disegno piu' una foto per ciascun colore gia'
+  // fotografato. Qui teniamo visibile solo quella giusta: se la foto di quel
+  // colore non c'e' ancora, si torna al disegno.
+  function swapMedia(scope, key) {
+    if (!scope) return;
+    var art = $('.bag__art', scope);
+    var wanted = $('.bag__photo[data-color="' + key + '"]', scope);
+    // La proprieta' .hidden esiste solo sugli elementi HTML: un <svg> non ce l'ha.
+    // Usiamo l'attributo, che funziona su entrambi.
+    $$('.bag__photo', scope).forEach(function (img) { toggle(img, img !== wanted); });
+    if (art) toggle(art, !!wanted);
+  }
+  function toggle(el, hide) {
+    if (hide) el.setAttribute('hidden', '');
+    else el.removeAttribute('hidden');
+  }
   $$('.card').forEach(function (card) {
     $$('.sw', card).forEach(function (sw) {
       var go = function (e) {
@@ -197,6 +214,7 @@
         sw.setAttribute('aria-pressed', 'true');
         card.dataset.color = sw.dataset.key;
         paint(card, sw);
+        swapMedia($('.card__media', card), sw.dataset.key);
       };
       sw.addEventListener('click', go);
     });
@@ -207,14 +225,21 @@
   // gli id si duplicherebbero e il browser userebbe sempre il primo: il colore
   // non seguirebbe. Qui li rendiamo univoci per ogni copia.
   var uid = 0;
-  function bagFor(slug, tag) {
+  function bagFor(slug, color, tag) {
+    var p = product(slug);
+    var photo = p && p.photos ? p.photos[color] : null;
+    if (photo) {
+      return '<img class="bag__svg" src="/assets/img/products/' + photo +
+        '" width="1000" height="1000" decoding="async" alt="Clutch ' + p.name +
+        ' all\u2019uncinetto, colore ' + (window.PRODUCTS.palette[color] || {}).name + '">';
+    }
     var card = $('.card[data-slug="' + slug + '"]');
-    if (!card) return '';
-    var el = $('.bag__svg', card);
-    if (!el || el.tagName === 'IMG') return el ? el.outerHTML : '';
+    var el = card && $('.bag__art', card);
+    if (!el) return '';
     var suffix = (tag || 'c') + (++uid);
-    return el.outerHTML.replace(
-      new RegExp('-' + slug + '(?=[")])', 'g'), '-' + slug + suffix);
+    return el.outerHTML
+      .replace(' hidden', '')
+      .replace(new RegExp('-' + slug + '(?=[")])', 'g'), '-' + slug + suffix);
   }
 
   /* ============================================================ quick view */
@@ -236,11 +261,13 @@
   function openPV(slug, color) {
     var p = product(slug); if (!p) return;
     PV = { slug: slug, size: p.sizes[0].id, color: color || p.colors[0], qty: 1 };
-    $('#pvMedia').innerHTML = bagFor(slug, 'pv');
+    $('#pvMedia').dataset.color = PV.color;
+    $('#pvMedia').innerHTML = bagFor(slug, PV.color, 'pv');
     $('#pvName').textContent = p.name;
     $('#pvTag').textContent = p.tagline;
     $('#pvStory').textContent = p.story;
     $('#pvMat').textContent = p.material;
+    $('#pvYarn').textContent = p.yarn;
 
     $('#pvSizes').innerHTML = p.sizes.map(function (s) {
       return '<button class="optbtn" type="button" role="button" aria-pressed="' +
@@ -267,6 +294,10 @@
     $('#pvSizeName').textContent = s.name;
     $('#pvQty').textContent = PV.qty;
     var media = $('#pvMedia');
+    if (media.dataset.color !== PV.color) {
+      media.dataset.color = PV.color;
+      media.innerHTML = bagFor(PV.slug, PV.color, 'pv');
+    }
     media.style.setProperty('--bag-lt', c.lt);
     media.style.setProperty('--bag', c.hex);
     media.style.setProperty('--bag-dk', c.dk);
@@ -346,7 +377,7 @@
       var p = product(i.slug); if (!p) return '';
       var s = sizeOf(p, i.size), c = colorOf(i.color);
       return '<div class="ci"><div class="ci__img" style="--bag-lt:' + c.lt + ';--bag:' + c.hex +
-        ';--bag-dk:' + c.dk + '">' + bagFor(i.slug) + '</div>' +
+        ';--bag-dk:' + c.dk + '">' + bagFor(i.slug, i.color, 'ci') + '</div>' +
         '<div><h3>' + p.name + '</h3><p>' + s.name + ' · ' + s.dim + ' · ' + c.name + '</p>' +
         '<div class="qty"><button type="button" data-q="-1" data-i="' + idx + '" aria-label="Riduci quantità">−</button>' +
         '<span>' + i.qty + '</span>' +
@@ -362,7 +393,7 @@
     $('#cartTot').textContent = euro(sub + ship);
     $('#cartHint').textContent = ship
       ? 'Aggiungi ' + euro(SHOP.freeFrom - sub) + ' per la spedizione gratuita.'
-      : 'Spedizione gratuita inclusa. Realizzazione 7–10 giorni lavorativi.';
+      : 'Spedizione gratuita inclusa. Lavorazione 10–14 giorni lavorativi.';
   }
 
   $('#cartItems').addEventListener('click', function (e) {

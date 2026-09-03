@@ -20,30 +20,40 @@ IG = "teresasardanelli"
 
 FAQ = [
     ("Quanto tempo ci vuole per ricevere la borsa?",
-     "Non tengo magazzino: ogni clutch viene cucita dopo l’ordine. Servono 7–10 giorni "
-     "lavorativi, più 1–2 giorni di spedizione tracciata. Se ti serve per una data precisa "
+     "Non tengo magazzino: ogni clutch viene lavorata a uncinetto dopo l’ordine. Servono "
+     "10–14 giorni lavorativi — la fodera è cucita a mano dentro, e anche quella vuole il "
+     "suo tempo — più 1–2 giorni di spedizione tracciata. Se ti serve per una data precisa "
      "scrivimelo prima di ordinare: quasi sempre riesco a organizzarmi."),
-    ("Posso avere un colore che non c’è in collezione?",
-     "Sì. Puoi mandarmi una foto del vestito o un campione di stoffa e cerco la tonalità "
-     "più vicina fra i tessuti che ho. Il sovrapprezzo per il su misura è di 20 euro."),
+    ("Che filati usi? Non è che si sformano?",
+     "Uso solo cotone: cotone egiziano per i modelli fini, cotone ritorto e fettuccia di "
+     "cotone riciclato per quelli più strutturati. Niente acrilico. Ogni borsa è bloccata a "
+     "umido a lavoro finito e foderata a mano con tessuto di cotone, che è la cosa che "
+     "davvero le impedisce di sformarsi: senza fodera, una borsa a uncinetto cede in un mese."),
+    ("Posso avere un colore o un punto che non c’è in collezione?",
+     "Sì. Puoi mandarmi una foto del vestito e cerco il filato più vicino fra quelli che ho, "
+     "oppure lo ordino. Posso anche fare la forma di un modello con il punto di un altro — "
+     "per esempio la Luna a punto ventaglio. Il sovrapprezzo per il su misura è di 20 euro."),
     ("Come si paga?",
      "Quando completi l’ordine mi arriva il riepilogo su WhatsApp o via email. Ti rispondo "
-     "con la conferma della disponibilità e i dati per il bonifico, oppure ti mando un link "
-     "di pagamento con carta o PayPal. Comincio a cucire quando ricevo il pagamento."),
+     "con la conferma e i dati per il bonifico, oppure ti mando un link di pagamento con "
+     "carta o PayPal. Comincio a lavorare quando ricevo il pagamento."),
     ("Quanto costa la spedizione?",
-     "Sette euro in tutta Italia, con tracciamento. Gratuita per ordini da 150 euro in su. "
+     "Sette euro in tutta Italia, con tracciamento. Gratuita per ordini da 120 euro in su. "
      "Per l’estero scrivimi: calcolo il costo esatto in base al paese."),
     ("Posso restituirla se non mi piace?",
      "Hai 14 giorni dalla consegna per il reso, purché la borsa sia integra e mai usata. "
-     "Le borse su misura, essendo fatte apposta per te, non sono rimborsabili — ma prima "
-     "di cucirle ti mando sempre un disegno da approvare."),
-    ("Come si lava e si conserva?",
-     "Mai in lavatrice. Un panno morbido appena umido per le macchie, e per seta e raso "
-     "meglio la lavanderia specializzata. Conservala nel sacchetto di cotone che trovi nella "
-     "confezione, lontano dal sole diretto."),
+     "Le borse su misura, essendo lavorate apposta per te, non sono rimborsabili — ma prima "
+     "di cominciare ti mando sempre la foto del campione del punto e del filato."),
+    ("Come si lava una borsa a uncinetto?",
+     "Mai in lavatrice e mai strizzata: il cotone lavorato a uncinetto si allunga da bagnato. "
+     "Per le macchie basta un panno umido con un po’ di sapone neutro, tamponando. Per un "
+     "lavaggio vero: acqua fredda, a mano, senza sfregare, poi asciugatura in piano su un "
+     "asciugamano — mai appesa, o il manico tira e la borsa si deforma. I modelli con manico "
+     "in legno o bambù vanno smontati prima (il manico si sfila, te lo spiego nel cartellino)."),
     ("Le riparate se si rovina?",
-     "Per il primo anno riparo gratis qualsiasi cucitura o chiusura che ceda: paghi solo la "
-     "spedizione per mandarmela. Dopo il primo anno il preventivo è simbolico."),
+     "Per il primo anno riparo gratis qualsiasi punto che si apra, manico che si allenti o "
+     "fodera che si scuce: paghi solo la spedizione per mandarmela. Dopo il primo anno il "
+     "preventivo è simbolico."),
 ]
 
 
@@ -79,14 +89,25 @@ def main():
         sizes = "".join("<span>%s</span>" % esc(s["name"]) for s in p["sizes"])
         badge = ('<span class="card__badge">%s</span>' % esc(p["badge"])) if p["badge"] else ""
 
-        # Se in products.json aggiungi "photo": "nome-file.jpg", al posto del
-        # disegno viene mostrata la tua fotografia (cartella assets/img/products/).
-        if p.get("photo"):
-            media = ('<img class="bag__svg" src="/assets/img/products/%s" width="800" height="800" '
-                     'loading="lazy" decoding="async" alt="Clutch %s — %s">'
-                     % (esc(p["photo"]), esc(p["name"]), esc(p["tagline"])))
+        # La media della scheda contiene il disegno + una fotografia per ogni
+        # colore gia' fotografato (products.json -> "photos"). Ne resta visibile
+        # una sola: la pastiglia colore fa lo scambio. Finche' la foto di quel
+        # colore non c'e', si vede il disegno.
+        photos = p.get("photos") or {}
+        media = bags.svg(p)
+        if photos.get(p["colors"][0]):
+            media = media.replace('class="bag__svg"', 'class="bag__svg bag__art" hidden', 1)
         else:
-            media = bags.svg(p)
+            media = media.replace('class="bag__svg"', 'class="bag__svg bag__art"', 1)
+        for key in p["colors"]:
+            f = photos.get(key)
+            if not f:
+                continue
+            media += ('<img class="bag__svg bag__photo" data-color="%s" '
+                      'src="/assets/img/products/%s" width="1000" height="1000" '
+                      'loading="lazy" decoding="async" alt="Clutch %s all\u2019uncinetto, colore %s"%s>'
+                      % (key, esc(f), esc(p["name"]), esc(pal[key]["name"]),
+                         "" if key == p["colors"][0] else " hidden"))
 
         cards.append(
             '      <article class="card reveal" data-slug="%s" data-cat="%s" data-color="%s"\n'
@@ -98,6 +119,7 @@ def main():
             '          <div class="card__row"><h3 class="card__name">%s</h3>\n'
             '            <div class="card__price">da <b>€%d</b></div></div>\n'
             '          <p class="card__tag">%s</p>\n'
+            '          <p class="card__yarn">%s</p>\n'
             '          <div class="card__foot">\n'
             '            <div class="swatches" role="group" aria-label="Colori di %s">%s</div>\n'
             '            <div class="sizes">%s</div>\n'
@@ -106,14 +128,14 @@ def main():
             '      </article>'
             % (p["slug"], p["category"], p["colors"][0],
                .06 * len(cards), first["lt"], first["hex"], first["dk"],
-               p["slug"], badge, media, p["slug"], esc(p["name"]), min(prices), esc(p["tagline"]),
+               p["slug"], badge, media, p["slug"], esc(p["name"]), min(prices), esc(p["tagline"]), esc(p["yarn"]),
                esc(p["name"]), swatches, sizes))
 
         select.append('          <option>%s — da €%d</option>' % (esc(p["name"]), min(prices)))
         offers.append({
             "@type": "Product",
             "name": "Clutch " + p["name"],
-            "description": p["tagline"] + " " + p["material"] + ".",
+            "description": p["tagline"] + " " + p["yarn"] + ". " + p["material"] + ".",
             "brand": {"@type": "Brand", "name": "Teresa Sardanelli"},
             "material": p["material"],
             "url": SITE + "/#collezione",
@@ -141,7 +163,7 @@ def main():
                 "@type": ["Organization", "Store"],
                 "@id": SITE + "/#brand",
                 "name": "Teresa Sardanelli",
-                "description": "Atelier artigianale di clutch bag cucite a mano in Italia.",
+                "description": "Atelier artigianale di clutch bag lavorate a uncinetto in Italia.",
                 "url": SITE + "/",
                 "email": EMAIL,
                 "founder": {"@type": "Person", "name": "Teresa Sardanelli"},
