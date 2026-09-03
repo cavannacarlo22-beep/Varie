@@ -1,161 +1,110 @@
-# Mettere il sito online su Vercel
+# Il sito è online — come aggiornarlo
 
-Il sito è **statico**: solo HTML, CSS, JavaScript, font e immagini. Non c'è niente da
-compilare, non serve Node, non serve un database. Vercel lo pubblica così com'è,
-**gratis**, su un indirizzo tipo `teresasardanelli.vercel.app`.
+**Indirizzo: https://teresa-sardanelli.vercel.app**
 
-> ⚠️ **Una cosa importante prima di cominciare.**
-> In questo repository ci sono **due siti**: nella cartella principale c'è il sito di
-> Carlo Cavanna, nella cartella `teresa/` c'è il tuo. Quando configuri Vercel devi
-> quindi indicare `teresa` come **Root Directory**. È un campo che trovi nella
-> schermata di configurazione: se lo salti, Vercel pubblica il sito sbagliato.
+La pubblicazione è già fatta, non devi rifare niente. Questo file serve per dopo:
+per capire com'è messo in piedi e cosa fare quando vuoi cambiare qualcosa.
 
 ---
 
-## Strada A — collegando GitHub (consigliata, ~5 minuti)
+## Com'è configurato
 
-È la strada migliore: ogni volta che il codice cambia su GitHub, il sito si aggiorna
-da solo, senza che tu debba rifare niente.
-
-### 1. Crea l'account
-Vai su **https://vercel.com/signup** e scegli **Continue with GitHub**.
-Accedi con l'account GitHub che possiede questo repository e autorizza Vercel.
-
-### 2. Importa il progetto
-Nella dashboard clicca **Add New…** → **Project**.
-Nella lista dei repository cerca **`Varie`** e clicca **Import**.
-
-Se non lo vedi nella lista, clicca *Adjust GitHub App Permissions* e concedi a Vercel
-l'accesso a quel repository.
-
-### 3. Configura (questo è il passaggio da non sbagliare)
-
-| Campo | Cosa mettere |
+| Cosa | Valore |
 |---|---|
-| **Project Name** | `teresa-sardanelli` — diventerà `teresa-sardanelli.vercel.app` |
-| **Framework Preset** | **Other** |
-| **Root Directory** | clicca **Edit** e seleziona la cartella **`teresa`** |
-| Build Command | *lascia vuoto* |
-| Output Directory | *lascia vuoto* |
-| Install Command | *lascia vuoto* |
+| Progetto Vercel | `teresa-sardanelli` |
+| Repository | `cavannacarlo22-beep/Varie` |
+| **Root Directory** | **`teresa`** ← la cosa che prima non andava |
+| Branch pubblicato | `claude/ui-ux-pro-max-skill-install-rn1tym` (il principale) |
+| Build | nessuna: è un sito statico, Vercel copia i file e basta |
 
-Il nome del progetto è quello che finisce nell'indirizzo, quindi scegli con calma:
-tutto minuscolo, senza spazi, con il trattino al posto degli spazi.
+### Perché prima vedevi il sito di Carlo
+Nel repository ci sono due siti: quello di Carlo nella radice, il tuo nella cartella
+`teresa/`. Se non dici a Vercel di guardare dentro `teresa`, lui pubblica la radice —
+cioè il sito di Carlo. È l'impostazione **Root Directory**, e adesso è a posto.
 
-### 4. Scegli il branch giusto
-Questo repository non ha un branch `main`: il tuo sito vive sul branch
-**`claude/clutch-bag-ecommerce-site-t9r581`**.
-
-Apri **Settings → Git → Production Branch** (lo trovi anche durante l'import, sotto
-*Git Branch*) e scrivi esattamente:
-
-```
-claude/clutch-bag-ecommerce-site-t9r581
-```
-
-### 5. Deploy
-Clicca **Deploy** e aspetta 20–40 secondi. Alla fine vedrai un'anteprima con i
-coriandoli e il link al sito: **`https://teresa-sardanelli.vercel.app`**. È già online
-e visibile a chiunque.
-
-### 6. (Facoltativo) Cambia l'indirizzo
-Se il nome non ti piace: **Settings → Domains**. Da lì puoi:
-- aggiungere un altro indirizzo `.vercel.app` gratuito (es. `clutch-teresa.vercel.app`);
-- collegare un dominio tuo, tipo `teresasardanelli.it`, se ne comprerai uno.
-  Vercel ti dirà quali record DNS impostare presso chi ti ha venduto il dominio.
+### Gli altri due progetti nel tuo account
+Nella dashboard trovi anche `varie` e `varie-dldm`: sono i tentativi di prima, puntano
+alla radice e quindi mostrano il sito di Carlo. Non danno fastidio a niente, ma se
+vuoi fare pulizia puoi cancellarli da **Settings → Advanced → Delete Project**. Non
+toccano né il tuo sito né il repository.
 
 ---
 
-## Strada B — senza GitHub, trascinando la cartella (~2 minuti)
+## Aggiornare il sito
 
-Più veloce ma meno comoda: a ogni modifica devi ripetere il caricamento a mano.
+Ogni volta che il codice cambia sul branch principale, **Vercel ripubblica da solo**
+in meno di un minuto. Non devi aprire la dashboard.
 
-1. Scarica il repository come ZIP da GitHub (**Code → Download ZIP**) ed estrailo.
-2. Vai su **https://vercel.com/new** e, in fondo alla pagina, cerca l'area
-   *deploy a folder* / **Drop your project folder here**.
-3. Trascina **solo la cartella `teresa`** (non tutto il repository).
-4. Vercel carica i file e pubblica. Alla fine ti dà il link `.vercel.app`.
-
----
-
-## Strada C — da terminale, con la CLI
-
-Se preferisci la riga di comando:
+Se modifichi i file da GitHub direttamente dal browser (matita in alto a destra su un
+file → *Commit changes*), il sito si aggiorna da sé. Da terminale:
 
 ```bash
-npm i -g vercel          # una volta sola
-cd teresa                # entra nella cartella del sito
-vercel login             # ti arriva un'email di conferma
-vercel --prod            # pubblica
+git add -A
+git commit -m "Aggiorno i prezzi"
+git push
 ```
 
-Alla prima esecuzione la CLI fa alcune domande: rispondi **N** a
-*"Want to modify these settings?"* e lascia il resto ai valori proposti.
+⚠️ Ricorda: se tocchi `scripts/products.json` (prezzi, colori, misure, foto) devi poi
+lanciare `python3 scripts/build.py` **prima** del commit, altrimenti il sito continua
+a mostrare i valori vecchi. Il perché è spiegato nel [README](README.md).
 
 ---
 
-## Dopo la pubblicazione: 3 cose da sistemare
+## Cambiare indirizzo
 
-### 1. Metti il tuo numero di WhatsApp
-Il pulsante **"Completa l'ordine"** manda il riepilogo del carrello su WhatsApp.
-Apri `assets/js/main.js`: le prime righe utili sono queste.
+Ora è `teresa-sardanelli.vercel.app`. In **Settings → Domains** puoi:
+
+- **aggiungere un altro indirizzo `.vercel.app` gratuito** — per esempio
+  `clutchdiTeresa.vercel.app`. Scrivi il nome, Vercel controlla se è libero e lo attiva
+  subito. Il vecchio continua a funzionare;
+- **collegare un dominio tuo** tipo `teresasardanelli.it`, se lo compri (15–20 euro
+  l'anno). Vercel ti dice quali due righe DNS impostare presso chi te l'ha venduto.
+
+Se cambi indirizzo, ricordati di aggiornarlo anche in tre punti:
+`scripts/build.py` (riga `SITE = ...`), `robots.txt` e `sitemap.xml`. Poi rigenera con
+`python3 scripts/build.py`. Servono per Google e per l'anteprima quando mandi il link
+su WhatsApp.
+
+---
+
+## Le due cose ancora da sistemare
+
+### 1. Il numero di WhatsApp (senza, gli ordini non arrivano bene)
+Il pulsante **Completa l'ordine** manda il riepilogo del carrello su WhatsApp. Finché
+il numero è vuoto, ripiega sull'email. Apri `assets/js/main.js`, in cima:
 
 ```js
 var SHOP = {
-  whatsapp: '',                          // ← qui
-  email: 'ciao@teresasardanelli.it',     // ← e qui
-  shipping: 7,
-  freeFrom: 150,
+  whatsapp: '',                          // ← il tuo numero
+  email: 'ciao@teresasardanelli.it',     // ← la tua email vera
 ```
 
-Scrivi il numero con il prefisso internazionale, **senza `+`, spazi o zeri iniziali**:
+Numero con prefisso internazionale, **senza `+`, spazi o zeri iniziali**:
 
 ```js
   whatsapp: '393401234567',
 ```
 
-Se lasci `whatsapp` vuoto, gli ordini partono via email all'indirizzo che metti sotto.
-Cambia anche l'email: compare nei contatti e nel piè di pagina.
+Cambia anche `IG = "teresasardanelli"` in `scripts/build.py` col tuo profilo Instagram
+vero, altrimenti il link nel sito porta a un profilo che non esiste.
 
-### 2. Cambia l'indirizzo del sito nei metadati
-In `scripts/build.py`, in alto, c'è:
-
-```python
-SITE = "https://teresasardanelli.vercel.app"
-IG   = "teresasardanelli"
-```
-
-Metti l'indirizzo vero che ti ha dato Vercel e il tuo vero profilo Instagram,
-poi rigenera il sito con `python3 scripts/build.py`.
-Aggiorna anche `robots.txt` e `sitemap.xml` con lo stesso indirizzo.
-
-### 3. Aggiorna il sito quando cambi qualcosa
-Se hai seguito la **Strada A**, ti basta salvare le modifiche su GitHub: Vercel
-ripubblica da solo in meno di un minuto. Da terminale:
-
-```bash
-git add -A
-git commit -m "Aggiorno prezzi"
-git push
-```
+### 2. Le foto
+In vetrina ci sono ancora i disegni. Vedi **[FOTO.md](FOTO.md)**: si può fare una foto
+alla volta, il sito è costruito apposta.
 
 ---
 
-## Problemi frequenti
+## Se qualcosa non va
 
-**Vedo il sito sbagliato (quello di Carlo).**
-Root Directory non è impostata su `teresa`. Vai in **Settings → General → Root
-Directory**, scrivi `teresa`, salva e fai **Redeploy** dalla scheda *Deployments*.
+**Ho modificato un file ma il sito è uguale.**
+Guarda su vercel.com → progetto `teresa-sardanelli` → scheda **Deployments**: in cima
+c'è l'ultimo tentativo. Se è verde (*Ready*), svuota la cache del browser
+(Ctrl+F5, o Cmd+Shift+R su Mac). Se è rosso (*Error*), clicca sopra e leggi il log.
 
-**Pagina bianca o senza stili.**
-Quasi sempre è ancora la Root Directory sbagliata. Controlla anche che il file
-`index.html` sia dentro `teresa/` e non in una sottocartella.
-
-**Ho modificato i prezzi ma il sito mostra ancora i vecchi.**
-I prezzi stanno in `scripts/products.json` e vanno "compilati" nel sito:
-lancia `python3 scripts/build.py`, poi fai commit e push.
+**Ho cambiato i prezzi in products.json ma il sito mostra i vecchi.**
+Manca `python3 scripts/build.py` prima del commit.
 
 **Il sito è online ma Google non lo trova.**
-È normale nei primi giorni. Per accelerare, registra il sito su
+Normale nei primi giorni. Per accelerare, registra il sito su
 [Google Search Console](https://search.google.com/search-console) e invia
-`https://iltuosito.vercel.app/sitemap.xml`.
+`https://teresa-sardanelli.vercel.app/sitemap.xml`.

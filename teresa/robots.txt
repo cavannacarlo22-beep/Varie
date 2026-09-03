@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://teresasardanelli.vercel.app/sitemap.xml
+Sitemap: https://teresa-sardanelli.vercel.app/sitemap.xml

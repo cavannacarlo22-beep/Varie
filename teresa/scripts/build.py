@@ -14,7 +14,7 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import bags  # noqa: E402
 
-SITE = "https://teresasardanelli.vercel.app"
+SITE = "https://teresa-sardanelli.vercel.app"
 EMAIL = "ciao@teresasardanelli.it"
 IG = "teresasardanelli"
 

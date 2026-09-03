@@ -4,7 +4,7 @@ Sito e-commerce vetrina per borsette lavorate a uncinetto. Statico, senza framew
 e senza build in produzione: 8 modelli, 6 punti, 2 misure per modello, 8 colori di
 filato, carrello con ordine via WhatsApp o email.
 
-- **Per pubblicarlo online → [DEPLOY.md](DEPLOY.md)**
+- **Il sito è online: https://teresa-sardanelli.vercel.app** — come aggiornarlo: [DEPLOY.md](DEPLOY.md)
 - **Per sostituire i disegni con le tue foto → [FOTO.md](FOTO.md)** ← comincia da qui
 
 ---
