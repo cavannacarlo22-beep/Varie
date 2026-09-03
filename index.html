@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carlo Cavanna — Creazione Siti Web su Misura | Web Designer & Developer</title>
+<meta name="description" content="Progetto e sviluppo siti web veloci, curati e pensati per trasformare i visitatori in clienti. Design su misura, zero template. Preventivo gratuito in 24 ore.">
+<meta name="author" content="Carlo Cavanna">
+<meta name="theme-color" content="#05050b">
+<link rel="canonical" href="https://carlocavanna.vercel.app/">
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Carlo Cavanna">
+<meta property="og:title" content="Carlo Cavanna — Creazione Siti Web su Misura">
+<meta property="og:description" content="Siti web veloci, curati e pensati per convertire. Design su misura, zero template. Preventivo gratuito in 24 ore.">
+<meta property="og:url" content="https://carlocavanna.vercel.app/">
+<meta property="og:image" content="/assets/img/og.png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Carlo Cavanna — Creazione Siti Web su Misura">
+<meta name="twitter:description" content="Siti web veloci, curati e pensati per convertire. Design su misura, zero template.">
+<meta name="twitter:image" content="/assets/img/og.png">
+
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/favicon.svg">
+
+<link rel="preload" href="/assets/fonts/space-grotesk-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<link rel="stylesheet" href="/assets/css/style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Carlo Cavanna — Creazione Siti Web",
+  "description": "Progettazione e sviluppo di siti web su misura: siti vetrina, landing page, e-commerce, restyling e ottimizzazione delle performance.",
+  "url": "https://carlocavanna.vercel.app/",
+  "email": "cavannacarlo22@gmail.com",
+  "areaServed": "IT",
+  "availableLanguage": "it",
+  "founder": { "@type": "Person", "name": "Carlo Cavanna", "jobTitle": "Web Designer & Developer" },
+  "serviceType": ["Creazione siti web", "Landing page", "E-commerce", "Restyling sito web", "SEO tecnica"],
+  "priceRange": "€€"
+}
+</script>
+</head>
+<body>
+
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="preloader__inner">
+    <div class="preloader__mark">CC</div>
+    <div class="preloader__bar"><span id="preloaderBar"></span></div>
+    <div class="preloader__count"><span id="preloaderNum">0</span>%</div>
+  </div>
+</div>
+
+<!-- ============ DECOR LAYERS ============ -->
+<canvas class="bg-canvas" id="bgCanvas" aria-hidden="true"></canvas>
+<div class="bg-fallback" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span></div>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#hero">Salta al contenuto</a>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#hero" data-magnetic>
+    <span class="nav__logo" aria-hidden="true">
+      <svg viewBox="0 0 40 40" fill="none"><path d="M28 12.5A9.5 9.5 0 1 0 28 27.5" stroke="url(#g1)" stroke-width="3.4" stroke-linecap="round"/><path d="M33 17.5A6.5 6.5 0 1 0 33 25" stroke="url(#g2)" stroke-width="3.4" stroke-linecap="round" opacity=".65"/><defs><linearGradient id="g1" x1="10" y1="10" x2="32" y2="30"><stop stop-color="#8B5CF6"/><stop offset="1" stop-color="#22D3EE"/></linearGradient><linearGradient id="g2" x1="26" y1="16" x2="36" y2="28"><stop stop-color="#22D3EE"/><stop offset="1" stop-color="#F472B6"/></linearGradient></defs></svg>
+    </span>
+    <span class="nav__name">Carlo <b>Cavanna</b></span>
+  </a>
+
+  <nav class="nav__links" aria-label="Navigazione principale">
+    <a href="#servizi">Servizi</a>
+    <a href="#lavori">Stili</a>
+    <a href="#processo">Processo</a>
+    <a href="#prezzi">Prezzi</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+
+  <a class="btn btn--sm btn--primary nav__cta" href="#contatti" data-magnetic>
+    <span>Preventivo gratuito</span>
+  </a>
+
+  <button class="nav__burger" id="navBurger" aria-label="Apri il menu" aria-expanded="false" aria-controls="mobileMenu">
+    <span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <nav aria-label="Navigazione mobile">
+    <a href="#servizi"><i>01</i> Servizi</a>
+    <a href="#lavori"><i>02</i> Stili</a>
+    <a href="#processo"><i>03</i> Processo</a>
+    <a href="#prezzi"><i>04</i> Prezzi</a>
+    <a href="#faq"><i>05</i> FAQ</a>
+    <a href="#contatti"><i>06</i> Contatti</a>
+  </nav>
+  <div class="mobile-menu__foot">
+    <a href="mailto:cavannacarlo22@gmail.com">cavannacarlo22@gmail.com</a>
+  </div>
+</div>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="hero__orb hero__orb--1" aria-hidden="true"></div>
+  <div class="hero__orb hero__orb--2" aria-hidden="true"></div>
+  <div class="hero__grid-lines" aria-hidden="true"></div>
+
+  <div class="container hero__inner">
+    <p class="eyebrow reveal">
+      <span class="pulse-dot" aria-hidden="true"></span>
+      Disponibile per nuovi progetti — Settembre 2026
+    </p>
+
+    <h1 class="hero__title">
+      <span class="line"><span class="split" data-split>Siti web che</span></span>
+      <span class="line"><span class="line-up gradient-text">lasciano</span></span>
+      <span class="line"><span class="split" data-split>il segno.</span></span>
+    </h1>
+
+    <p class="hero__lead reveal" data-delay="120">
+      Sono <strong>Carlo Cavanna</strong>, web designer &amp; developer. Progetto e sviluppo siti
+      <em>su misura</em> — veloci, curati in ogni pixel e costruiti per trasformare
+      i visitatori in clienti. Nessun template riciclato.
+    </p>
+
+    <div class="hero__actions reveal" data-delay="220">
+      <a class="btn btn--primary btn--lg" href="#contatti" data-magnetic>
+        <span>Richiedi un preventivo</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      </a>
+      <a class="btn btn--ghost btn--lg" href="#lavori" data-magnetic>
+        <span>Guarda gli stili</span>
+      </a>
+    </div>
+
+    <!-- MODIFICA: numeri e promesse commerciali — adattali a quello che vuoi garantire -->
+    <ul class="hero__stats reveal" data-delay="320">
+      <li><b data-count="24" data-suffix="h">0h</b><span>Risposta al preventivo</span></li>
+      <li><b data-count="7" data-suffix=" gg">0 gg</b><span>Consegna di una landing</span></li>
+      <li><b data-count="100" data-suffix="/100">0/100</b><span>Obiettivo Lighthouse</span></li>
+      <li><b data-count="0" data-suffix="">0</b><span>Template preconfezionati</span></li>
+    </ul>
+  </div>
+
+  <a class="hero__scroll" href="#servizi" aria-label="Scorri verso il basso">
+    <span class="hero__scroll-line" aria-hidden="true"></span>
+    <span>scorri</span>
+  </a>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <div class="marquee__group">
+      <span>Siti vetrina</span><i>✦</i><span>Landing page</span><i>✦</i><span>E-commerce</span><i>✦</i>
+      <span>Restyling</span><i>✦</i><span>SEO tecnica</span><i>✦</i><span>Motion design</span><i>✦</i>
+      <span>Performance</span><i>✦</i><span>Manutenzione</span><i>✦</i>
+    </div>
+    <div class="marquee__group">
+      <span>Siti vetrina</span><i>✦</i><span>Landing page</span><i>✦</i><span>E-commerce</span><i>✦</i>
+      <span>Restyling</span><i>✦</i><span>SEO tecnica</span><i>✦</i><span>Motion design</span><i>✦</i>
+      <span>Performance</span><i>✦</i><span>Manutenzione</span><i>✦</i>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SERVIZI (BENTO) ============ -->
+<section class="section" id="servizi">
+  <div class="container">
+    <header class="sec-head">
+      <p class="eyebrow reveal"><span class="idx">01</span> Servizi</p>
+      <h2 class="sec-title reveal" data-delay="80">Tutto quello che serve<br><span class="dim">per essere online davvero.</span></h2>
+      <p class="sec-sub reveal" data-delay="160">Dalla prima riga di testo all'ultima ottimizzazione. Un unico referente, nessun rimpallo tra fornitori.</p>
+    </header>
+
+    <div class="bento">
+      <article class="card card--tall spot reveal" data-tilt>
+        <div class="card__glow" aria-hidden="true"></div>
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4" width="19" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 8.5h19" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="6.2" r=".9" fill="currentColor"/><path d="M6.5 12.5h7M6.5 15.5h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Siti vetrina su misura</h3>
+        <p>Il tuo biglietto da visita digitale: struttura chiara, testi persuasivi e un design che comunica esattamente il livello del tuo lavoro.</p>
+        <ul class="card__list">
+          <li>Design originale, mai un template</li>
+          <li>Responsive su ogni schermo</li>
+          <li>Pannello per aggiornare i contenuti</li>
+        </ul>
+      </article>
+
+      <article class="card card--accent spot reveal" data-delay="60" data-tilt>
+        <div class="card__glow" aria-hidden="true"></div>
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12l1-7.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Landing page che convertono</h3>
+        <p>Una pagina, un obiettivo. Costruita sulla psicologia dell'acquisto e misurabile dal primo giorno.</p>
+      </article>
+
+      <article class="card spot reveal" data-delay="120" data-tilt>
+        <div class="card__glow" aria-hidden="true"></div>
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16l-1.4 11.2a2 2 0 0 1-2 1.8H7.4a2 2 0 0 1-2-1.8L4 7Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>E-commerce</h3>
+        <p>Cataloghi, pagamenti sicuri, spedizioni e fatturazione. Pronto a vendere, semplice da gestire.</p>
+      </article>
+
+      <article class="card spot reveal" data-delay="180" data-tilt>
+        <div class="card__glow" aria-hidden="true"></div>
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="1.6"/></svg>
+        </div>
+        <h3>Restyling &amp; performance</h3>
+        <p>Hai già un sito ma è lento o datato? Lo rifaccio conservando ciò che funziona e triplicando la velocità.</p>
+      </article>
+
+      <article class="card card--wide spot reveal" data-delay="240" data-tilt>
+        <div class="card__glow" aria-hidden="true"></div>
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>SEO tecnica &amp; Core Web Vitals</h3>
+        <p>Struttura semantica, dati strutturati, immagini ottimizzate, sitemap e velocità: le basi per farti trovare su Google senza buttare soldi in pubblicità.</p>
+        <div class="metrics" aria-hidden="true">
+          <div class="metric"><span class="metric__label">LCP</span><span class="metric__bar"><i style="--v:92%"></i></span><span class="metric__val">0.9s</span></div>
+          <div class="metric"><span class="metric__label">CLS</span><span class="metric__bar"><i style="--v:96%"></i></span><span class="metric__val">0.01</span></div>
+          <div class="metric"><span class="metric__label">INP</span><span class="metric__bar"><i style="--v:88%"></i></span><span class="metric__val">42ms</span></div>
+        </div>
+      </article>
+
+      <article class="card spot reveal" data-delay="300" data-tilt>
+        <div class="card__glow" aria-hidden="true"></div>
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 17c4-10 14-10 18 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="17" r="2.6" stroke="currentColor" stroke-width="1.6"/></svg>
+        </div>
+        <h3>Animazioni &amp; motion</h3>
+        <p>Micro-interazioni e transizioni fluide che rendono la navigazione memorabile — senza mai rallentare il sito.</p>
+      </article>
+
+      <article class="card spot reveal" data-delay="360" data-tilt>
+        <div class="card__glow" aria-hidden="true"></div>
+        <div class="card__icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5 20 7v5.5c0 4.3-3.2 7-8 8-4.8-1-8-3.7-8-8V7l8-3.5Z" stroke="currentColor" stroke-width="1.6"/><path d="m8.8 12.2 2.2 2.2 4.2-4.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Manutenzione &amp; sicurezza</h3>
+        <p>Backup, aggiornamenti, monitoraggio uptime e piccole modifiche incluse. Tu pensi al lavoro, al sito penso io.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STILI / LAVORI ============ -->
+<section class="section section--alt" id="lavori">
+  <div class="container">
+    <header class="sec-head">
+      <p class="eyebrow reveal"><span class="idx">02</span> Stili</p>
+      <h2 class="sec-title reveal" data-delay="80">Ogni progetto ha<br><span class="dim">la sua personalità.</span></h2>
+      <p class="sec-sub reveal" data-delay="160">
+        Tre direzioni creative fra le tante possibili: qui sotto le vedi in anteprima.
+        <span class="note">Concept dimostrativi — i progetti reali arrivano su richiesta.</span>
+      </p>
+    </header>
+
+    <div class="works">
+      <article class="work reveal" data-tilt>
+        <div class="work__frame">
+          <div class="browser">
+            <div class="browser__bar"><i></i><i></i><i></i><span>studio-architettura.it</span></div>
+            <div class="browser__view browser__view--mono">
+              <div class="mock mock--mono">
+                <div class="mock__nav"><span class="mock__logo"></span><span class="mock__links"><i></i><i></i><i></i></span></div>
+                <div class="mock__h1"></div><div class="mock__h1 mock__h1--short"></div>
+                <div class="mock__row"><div class="mock__img"></div><div class="mock__img"></div></div>
+                <div class="mock__text"></div><div class="mock__text mock__text--s"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="work__meta">
+          <h3>Minimal editoriale</h3>
+          <p>Bianco, nero e tanta aria. Per studi professionali, architetti, consulenti.</p>
+          <ul class="tags"><li>Vetrina</li><li>Tipografia</li><li>Portfolio</li></ul>
+        </div>
+      </article>
+
+      <article class="work reveal" data-delay="90" data-tilt>
+        <div class="work__frame">
+          <div class="browser">
+            <div class="browser__bar"><i></i><i></i><i></i><span>bistrot-milano.it</span></div>
+            <div class="browser__view browser__view--warm">
+              <div class="mock mock--warm">
+                <div class="mock__nav"><span class="mock__logo"></span><span class="mock__links"><i></i><i></i><i></i></span></div>
+                <div class="mock__hero-img"></div>
+                <div class="mock__h1 mock__h1--short"></div>
+                <div class="mock__row3"><div class="mock__card"></div><div class="mock__card"></div><div class="mock__card"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="work__meta">
+          <h3>Caldo &amp; accogliente</h3>
+          <p>Fotografia protagonista e prenotazione in un tap. Per ristoranti, hotel, wellness.</p>
+          <ul class="tags"><li>Booking</li><li>Foto</li><li>Mobile-first</li></ul>
+        </div>
+      </article>
+
+      <article class="work reveal" data-delay="180" data-tilt>
+        <div class="work__frame">
+          <div class="browser">
+            <div class="browser__bar"><i></i><i></i><i></i><span>saas-startup.io</span></div>
+            <div class="browser__view browser__view--neon">
+              <div class="mock mock--neon">
+                <div class="mock__nav"><span class="mock__logo"></span><span class="mock__links"><i></i><i></i><i></i></span></div>
+                <div class="mock__h1"></div>
+                <div class="mock__cta"></div>
+                <div class="mock__chart"><i style="--h:38%"></i><i style="--h:60%"></i><i style="--h:47%"></i><i style="--h:82%"></i><i style="--h:66%"></i><i style="--h:95%"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="work__meta">
+          <h3>Tech &amp; futurista</h3>
+          <p>Gradienti, dati e animazioni. Per startup, SaaS, agenzie e prodotti digitali.</p>
+          <ul class="tags"><li>Landing</li><li>Dashboard</li><li>Motion</li></ul>
+        </div>
+      </article>
+    </div>
+
+    <p class="works__cta reveal">
+      Ti serve una direzione diversa? <a href="#contatti" class="link-underline">Raccontami il progetto</a> e la costruiamo insieme.
+    </p>
+  </div>
+</section>
+
+<!-- ============ PROCESSO ============ -->
+<section class="section" id="processo">
+  <div class="container">
+    <header class="sec-head">
+      <p class="eyebrow reveal"><span class="idx">03</span> Processo</p>
+      <h2 class="sec-title reveal" data-delay="80">Come nasce<br><span class="dim">il tuo sito.</span></h2>
+      <p class="sec-sub reveal" data-delay="160">Un percorso in sei passi, senza sorprese: sai sempre a che punto siamo e cosa succede dopo.</p>
+    </header>
+
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step__num">01</span>
+        <div class="step__body">
+          <h3>Ascolto</h3>
+          <p>Una chiamata di 30 minuti per capire chi sei, chi vuoi attirare e cosa deve fare il sito. Gratuita e senza impegno.</p>
+        </div>
+      </li>
+      <li class="step reveal" data-delay="70">
+        <span class="step__num">02</span>
+        <div class="step__body">
+          <h3>Strategia &amp; struttura</h3>
+          <p>Definiamo pagine, gerarchia dei contenuti e percorso dell'utente verso il contatto o l'acquisto.</p>
+        </div>
+      </li>
+      <li class="step reveal" data-delay="140">
+        <span class="step__num">03</span>
+        <div class="step__body">
+          <h3>Design</h3>
+          <p>Ti mostro il concept grafico della homepage. Rivediamo insieme colori, font e tono fino al sì definitivo.</p>
+        </div>
+      </li>
+      <li class="step reveal" data-delay="210">
+        <span class="step__num">04</span>
+        <div class="step__body">
+          <h3>Sviluppo</h3>
+          <p>Codice pulito, animazioni fluide, test su desktop, tablet e telefono. Anteprima online per seguire i progressi.</p>
+        </div>
+      </li>
+      <li class="step reveal" data-delay="280">
+        <span class="step__num">05</span>
+        <div class="step__body">
+          <h3>Lancio</h3>
+          <p>Dominio, hosting, certificato SSL, Analytics e invio a Google. Metto tutto online io: tu approvi e sei live.</p>
+        </div>
+      </li>
+      <li class="step reveal" data-delay="350">
+        <span class="step__num">06</span>
+        <div class="step__body">
+          <h3>Crescita</h3>
+          <p>Dopo il lancio resto a disposizione: modifiche, nuove pagine, monitoraggio dei risultati e miglioramenti continui.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ PREZZI ============ -->
+<section class="section section--alt" id="prezzi">
+  <div class="container">
+    <header class="sec-head">
+      <p class="eyebrow reveal"><span class="idx">04</span> Prezzi</p>
+      <h2 class="sec-title reveal" data-delay="80">Trasparenti,<br><span class="dim">dal primo messaggio.</span></h2>
+      <p class="sec-sub reveal" data-delay="160">Prezzi di partenza indicativi. Il preventivo definitivo dipende da numero di pagine, contenuti e funzioni: lo ricevi in 24 ore, scritto e senza sorprese.</p>
+    </header>
+
+    <!-- MODIFICA: cifre e voci dei pacchetti — allineale ai tuoi listini reali -->
+    <div class="plans">
+      <article class="plan reveal" data-tilt>
+        <div class="plan__head">
+          <h3>Landing Page</h3>
+          <p>Una pagina, un obiettivo chiaro.</p>
+        </div>
+        <div class="plan__price"><span class="plan__from">da</span> <b>€490</b></div>
+        <ul class="plan__list">
+          <li>Design su misura, una pagina</li>
+          <li>Copywriting persuasivo incluso</li>
+          <li>Form contatti + WhatsApp</li>
+          <li>SEO di base &amp; Analytics</li>
+          <li>Consegna in 5–7 giorni</li>
+        </ul>
+        <a class="btn btn--ghost btn--block" href="#contatti" data-magnetic><span>Richiedi preventivo</span></a>
+      </article>
+
+      <article class="plan plan--featured reveal" data-delay="90" data-tilt>
+        <span class="plan__badge">Il più richiesto</span>
+        <div class="plan__head">
+          <h3>Sito Business</h3>
+          <p>La presenza completa della tua attività.</p>
+        </div>
+        <div class="plan__price"><span class="plan__from">da</span> <b>€1.190</b></div>
+        <ul class="plan__list">
+          <li>Fino a 6 pagine su misura</li>
+          <li>Animazioni e micro-interazioni</li>
+          <li>Blog o sezione news opzionale</li>
+          <li>SEO on-page &amp; dati strutturati</li>
+          <li>Pannello per aggiornarti i testi</li>
+          <li>2 giri di revisioni inclusi</li>
+          <li>Consegna in 2–3 settimane</li>
+        </ul>
+        <a class="btn btn--primary btn--block" href="#contatti" data-magnetic><span>Richiedi preventivo</span></a>
+      </article>
+
+      <article class="plan reveal" data-delay="180" data-tilt>
+        <div class="plan__head">
+          <h3>E-commerce &amp; Custom</h3>
+          <p>Vendere online o progetti complessi.</p>
+        </div>
+        <div class="plan__price"><span class="plan__from">da</span> <b>€2.490</b></div>
+        <ul class="plan__list">
+          <li>Catalogo prodotti e varianti</li>
+          <li>Pagamenti, spedizioni, fatture</li>
+          <li>Integrazioni e automazioni</li>
+          <li>Formazione all'uso inclusa</li>
+          <li>Tempi e funzioni su misura</li>
+        </ul>
+        <a class="btn btn--ghost btn--block" href="#contatti" data-magnetic><span>Parliamone</span></a>
+      </article>
+    </div>
+
+    <div class="plans__note reveal">
+      <div>
+        <b>Manutenzione da €39/mese</b>
+        <span>Backup, aggiornamenti, monitoraggio e piccole modifiche. Opzionale, disdicibile quando vuoi.</span>
+      </div>
+      <div>
+        <b>Pagamento in due tranche</b>
+        <span>50% all'inizio, 50% al lancio. Dominio e hosting li intesti a te: nessun vincolo con me.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PERCHÉ ME ============ -->
+<section class="section" id="perche">
+  <div class="container">
+    <div class="why">
+      <div class="why__text">
+        <p class="eyebrow reveal"><span class="idx">05</span> Perché me</p>
+        <h2 class="sec-title reveal" data-delay="80">Parli con chi<br><span class="dim">scrive il codice.</span></h2>
+        <p class="sec-sub reveal" data-delay="160">
+          Niente account manager, niente catena di intermediari. Il tuo progetto lo penso,
+          lo disegno e lo sviluppo io: le decisioni sono rapide e le modifiche arrivano in giornata.
+        </p>
+        <a class="btn btn--primary btn--lg reveal" data-delay="240" href="#contatti" data-magnetic>
+          <span>Iniziamo</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </a>
+      </div>
+      <ul class="why__list">
+        <li class="reveal" data-delay="60"><b>Un solo referente</b><span>Dalla prima idea al lancio, sempre la stessa persona.</span></li>
+        <li class="reveal" data-delay="120"><b>Codice tuo, per sempre</b><span>Nessun canone obbligatorio, nessun lock-in: il sito è di tua proprietà.</span></li>
+        <li class="reveal" data-delay="180"><b>Velocità come priorità</b><span>Ottimizzo immagini, font e script perché un secondo in più costa clienti.</span></li>
+        <li class="reveal" data-delay="240"><b>Accessibile e a norma</b><span>Contrasti, navigazione da tastiera, cookie banner e privacy fatti bene.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section section--alt" id="faq">
+  <div class="container container--narrow">
+    <header class="sec-head sec-head--center">
+      <p class="eyebrow reveal"><span class="idx">06</span> FAQ</p>
+      <h2 class="sec-title reveal" data-delay="80">Le domande<br><span class="dim">che mi fanno sempre.</span></h2>
+    </header>
+
+    <div class="faq">
+      <details class="faq__item reveal">
+        <summary>Quanto costa esattamente un sito?</summary>
+        <div class="faq__body"><p>Dipende da quante pagine servono, se i contenuti ci sono già e quali funzioni vuoi. I prezzi qui sopra sono le basi di partenza reali: dopo una chiamata di 30 minuti ti mando un preventivo scritto con cifra fissa, così sai in anticipo quanto spendi. Nessun costo a sorpresa in corsa.</p></div>
+      </details>
+      <details class="faq__item reveal" data-delay="60">
+        <summary>In quanto tempo è online?</summary>
+        <div class="faq__body"><p>Una landing page in 5–7 giorni, un sito business in 2–3 settimane, un e-commerce in 4–6. Il fattore che rallenta di più è sempre lo stesso: l'attesa di testi e foto. Se non li hai, ti aiuto a produrli.</p></div>
+      </details>
+      <details class="faq__item reveal" data-delay="120">
+        <summary>Devo scrivere io i testi?</summary>
+        <div class="faq__body"><p>No. Il copywriting è incluso: tu mi racconti il tuo lavoro con parole tue, io lo trasformo in testi che convincono e che Google capisce. Poi li rileggi e approvi.</p></div>
+      </details>
+      <details class="faq__item reveal" data-delay="180">
+        <summary>Dominio e hosting sono compresi?</summary>
+        <div class="faq__body"><p>Li configuro io e li intesto a te, così restano tua proprietà. Il costo dei servizi esterni (dominio circa €12–15 all'anno, hosting da gratuito a €20 al mese secondo il progetto) lo paghi direttamente al fornitore: nessun ricarico da parte mia.</p></div>
+      </details>
+      <details class="faq__item reveal" data-delay="240">
+        <summary>Il sito arriverà primo su Google?</summary>
+        <div class="faq__body"><p>Nessuno può promettertelo onestamente. Quello che faccio è costruire basi tecniche impeccabili — struttura, velocità, dati strutturati, contenuti scritti bene — che sono la condizione necessaria per posizionarsi. Se poi vuoi una strategia SEO continuativa, ne parliamo a parte.</p></div>
+      </details>
+      <details class="faq__item reveal" data-delay="300">
+        <summary>Posso aggiornare i contenuti da solo?</summary>
+        <div class="faq__body"><p>Sì. Dove serve inserisco un pannello di gestione semplice e ti lascio una videoguida registrata sul tuo sito. Se preferisci non pensarci, le modifiche sono incluse nel piano di manutenzione.</p></div>
+      </details>
+      <details class="faq__item reveal" data-delay="360">
+        <summary>Lavori anche a distanza?</summary>
+        <div class="faq__body"><p>Sempre. Videocall, email e messaggi: seguo clienti in tutta Italia senza differenze rispetto a un incontro di persona. L'anteprima online del sito la puoi vedere in qualunque momento dal tuo telefono.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTATTI ============ -->
+<section class="section" id="contatti">
+  <div class="container">
+    <div class="contact">
+      <div class="contact__intro">
+        <p class="eyebrow reveal"><span class="idx">07</span> Contatti</p>
+        <h2 class="sec-title reveal" data-delay="80">Raccontami<br><span class="dim">il tuo progetto.</span></h2>
+        <p class="sec-sub reveal" data-delay="160">Compila il form e ricevi un preventivo scritto entro 24 ore. Oppure scrivimi direttamente: rispondo sempre io.</p>
+        <a class="contact__mail reveal" data-delay="220" href="mailto:cavannacarlo22@gmail.com" data-magnetic>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="m3.5 7 8.5 6 8.5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          cavannacarlo22@gmail.com
+        </a>
+        <ul class="contact__facts reveal" data-delay="280">
+          <li><span class="pulse-dot" aria-hidden="true"></span> Risposta entro 24 ore</li>
+          <li>Prima chiamata gratuita, 30 minuti</li>
+          <li>Preventivo scritto a cifra fissa</li>
+        </ul>
+      </div>
+
+      <form class="form reveal" id="contactForm" data-delay="120" novalidate>
+        <div class="form__row">
+          <div class="field">
+            <label for="f-nome">Nome e cognome</label>
+            <input type="text" id="f-nome" name="nome" required autocomplete="name" placeholder="Mario Rossi">
+            <small class="field__err">Dimmi come ti chiami.</small>
+          </div>
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input type="email" id="f-email" name="email" required autocomplete="email" placeholder="mario@azienda.it">
+            <small class="field__err">Serve un'email valida per risponderti.</small>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label for="f-tipo">Tipo di progetto</label>
+            <select id="f-tipo" name="tipo" required>
+              <option value="">Scegli…</option>
+              <option>Landing page</option>
+              <option>Sito vetrina / business</option>
+              <option>E-commerce</option>
+              <option>Restyling di un sito esistente</option>
+              <option>Altro / non lo so ancora</option>
+            </select>
+            <small class="field__err">Scegli un'opzione.</small>
+          </div>
+          <div class="field">
+            <label for="f-budget">Budget indicativo</label>
+            <select id="f-budget" name="budget">
+              <option value="">Preferisco parlarne</option>
+              <option>Fino a €500</option>
+              <option>€500 – €1.500</option>
+              <option>€1.500 – €3.000</option>
+              <option>Oltre €3.000</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-msg">Il progetto in due righe</label>
+          <textarea id="f-msg" name="messaggio" rows="4" required placeholder="Cosa fai, a chi ti rivolgi e cosa vorresti ottenere dal sito."></textarea>
+          <small class="field__err">Scrivimi due righe sul progetto.</small>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="f-privacy" required>
+          <span>Ho letto e accetto il trattamento dei dati per essere ricontattato.</span>
+        </label>
+
+        <button class="btn btn--primary btn--lg btn--block" type="submit" data-magnetic>
+          <span>Invia la richiesta</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </button>
+
+        <p class="form__hint" id="formHint" role="status" aria-live="polite">
+          Il pulsante apre il tuo programma di posta con il messaggio già pronto.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <p class="footer__kicker">Pronto a partire?</p>
+        <a class="footer__mail" href="mailto:cavannacarlo22@gmail.com">cavannacarlo22@gmail.com</a>
+      </div>
+      <nav class="footer__nav" aria-label="Navigazione footer">
+        <a href="#servizi">Servizi</a>
+        <a href="#lavori">Stili</a>
+        <a href="#processo">Processo</a>
+        <a href="#prezzi">Prezzi</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contatti">Contatti</a>
+      </nav>
+    </div>
+
+    <div class="footer__wordmark" aria-hidden="true">CARLO CAVANNA</div>
+
+    <div class="footer__bottom">
+      <span>© <span id="year">2026</span> Carlo Cavanna — Creazione siti web su misura.</span>
+      <span>Progettato e sviluppato a mano. <a href="#hero" class="link-underline">Torna su ↑</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/bg.js" defer></script>
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>
