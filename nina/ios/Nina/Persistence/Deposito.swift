@@ -28,6 +28,19 @@ final class Deposito {
     /// Chiamata dopo ogni scrittura locale, per svegliare la sincronizzazione.
     var alCambiamento: (() -> Void)?
 
+    /// L'unico magazzino dell'app.
+    ///
+    /// Serve perché gli App Intent — il bottone del widget, le richieste a
+    /// Siri — girano nel processo dell'app ma fuori dalle sue viste. Se
+    /// ciascuno costruisse il proprio `Deposito`, aprirebbe un secondo
+    /// `ModelContainer` sullo stesso file: la scrittura andrebbe a buon fine,
+    /// ma le schermate aperte non se ne accorgerebbero, perché osservano un
+    /// contenitore diverso. Si spunterebbe una cosa dal widget e nell'app
+    /// resterebbe da fare.
+    ///
+    /// I test usano `Deposito(inMemoria: true)` e non toccano questa istanza.
+    static let condiviso = Deposito()
+
     init(inMemoria: Bool = false) {
         let schema = Schema([
             Attivita.self,

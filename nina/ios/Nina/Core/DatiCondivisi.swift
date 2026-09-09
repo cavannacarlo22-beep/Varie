@@ -61,14 +61,22 @@ enum DatiCondivisi {
 
     // MARK: - Scrittura (dall'app)
 
+    /// Riscrive la fotografia per i widget.
+    ///
+    /// `nome` è opzionale di proposito. Quando la scrittura parte da un App
+    /// Intent — il bottone del widget, una richiesta a Siri — il nome della
+    /// persona non è a portata di mano, perché vive nella sessione e non nel
+    /// magazzino. Passando `nil` si tiene quello già scritto: altrimenti
+    /// spuntare un'attività dal widget farebbe sparire il "Ciao Giulia" e
+    /// resterebbe un "Ciao" monco fino al successivo avvio dell'app.
     @MainActor
-    static func aggiorna(deposito depositoApp: Deposito, nome: String, frase: Frase?) {
+    static func aggiorna(deposito depositoApp: Deposito, nome: String? = nil, frase: Frase?) {
         let oggi = CalendarioNina.oggi
         let attivita = depositoApp.attivita(del: oggi)
 
         let fotografia = FotografiaGiornata(
             giorno: oggi,
-            nome: nome,
+            nome: nome ?? leggi().nome,
             voci: attivita.prefix(8).map { singola in
                 FotografiaGiornata.Voce(
                     id: singola.id,

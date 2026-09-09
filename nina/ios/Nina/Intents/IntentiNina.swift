@@ -21,8 +21,8 @@ import WidgetKit
 // MARK: - Spunta un'attività (usato dal widget)
 
 struct SpuntaAttivita: AppIntent {
-    static var title: LocalizedStringResource = "Segna come fatta"
-    static var description = IntentDescription("Spunta un'attività di oggi.")
+    static let title: LocalizedStringResource = "Segna come fatta"
+    static let description = IntentDescription("Spunta un'attività di oggi.")
 
     /// Serve solo al bottone del widget: non deve comparire fra i Comandi rapidi.
     static var isDiscoverable: Bool { false }
@@ -40,14 +40,14 @@ struct SpuntaAttivita: AppIntent {
     func perform() async throws -> some IntentResult {
         guard let id = UUID(uuidString: idAttivita) else { return .result() }
 
-        let deposito = Deposito()
+        let deposito = Deposito.condiviso
         guard let attivita = deposito.attivita(id: id) else { return .result() }
 
         deposito.completa(attivita, !attivita.completata)
 
         // La fotografia condivisa va riscritta, altrimenti il widget continua a
         // mostrare lo stato di prima.
-        DatiCondivisi.aggiorna(deposito: deposito, nome: "", frase: deposito.fraseLocale())
+        DatiCondivisi.aggiorna(deposito: deposito, frase: deposito.fraseLocale())
         WidgetCenter.shared.reloadAllTimelines()
 
         return .result()
@@ -57,15 +57,15 @@ struct SpuntaAttivita: AppIntent {
 // MARK: - "Cosa devo fare oggi?"
 
 struct CosaDevoFareOggi: AppIntent {
-    static var title: LocalizedStringResource = "Cosa devo fare oggi"
-    static var description = IntentDescription("Nina ti dice cosa hai in programma per oggi.")
+    static let title: LocalizedStringResource = "Cosa devo fare oggi"
+    static let description = IntentDescription("Nina ti dice cosa hai in programma per oggi.")
 
     /// Non apre l'app: risponde e basta. È il punto di una domanda a Siri.
     static var openAppWhenRun: Bool { false }
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let deposito = Deposito()
+        let deposito = Deposito.condiviso
         let attivita = deposito.attivita(del: CalendarioNina.oggi)
         let daFare = attivita.filter { !$0.completata }
 
@@ -97,8 +97,8 @@ struct CosaDevoFareOggi: AppIntent {
 // MARK: - Aggiungi una cosa alla lista
 
 struct AggiungiCosa: AppIntent {
-    static var title: LocalizedStringResource = "Aggiungi una cosa da fare"
-    static var description = IntentDescription("Aggiunge un'attività alla lista di oggi.")
+    static let title: LocalizedStringResource = "Aggiungi una cosa da fare"
+    static let description = IntentDescription("Aggiunge un'attività alla lista di oggi.")
     static var openAppWhenRun: Bool { false }
 
     @Parameter(title: "Cosa", requestValueDialog: "Cosa devo segnare?")
@@ -117,10 +117,10 @@ struct AggiungiCosa: AppIntent {
             return .result(dialog: "Non ho capito cosa segnare.")
         }
 
-        let deposito = Deposito()
+        let deposito = Deposito.condiviso
         deposito.creaAttivita(titolo: testo, giorno: CalendarioNina.oggi, categoria: .personale)
 
-        DatiCondivisi.aggiorna(deposito: deposito, nome: "", frase: deposito.fraseLocale())
+        DatiCondivisi.aggiorna(deposito: deposito, frase: deposito.fraseLocale())
         WidgetCenter.shared.reloadAllTimelines()
 
         return .result(dialog: "Fatto, l'ho segnata 💗")
@@ -130,13 +130,13 @@ struct AggiungiCosa: AppIntent {
 // MARK: - Completa la prossima attività
 
 struct CompletaProssima: AppIntent {
-    static var title: LocalizedStringResource = "Segna fatta la prossima attività"
-    static var description = IntentDescription("Spunta la prima cosa non ancora fatta di oggi.")
+    static let title: LocalizedStringResource = "Segna fatta la prossima attività"
+    static let description = IntentDescription("Spunta la prima cosa non ancora fatta di oggi.")
     static var openAppWhenRun: Bool { false }
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let deposito = Deposito()
+        let deposito = Deposito.condiviso
 
         // "La prossima" è la prima non fatta in ordine di orario: le attività
         // senza orario vanno in fondo, come nell'elenco dell'app.
@@ -149,7 +149,7 @@ struct CompletaProssima: AppIntent {
         }
 
         deposito.completa(prossima, true)
-        DatiCondivisi.aggiorna(deposito: deposito, nome: "", frase: deposito.fraseLocale())
+        DatiCondivisi.aggiorna(deposito: deposito, frase: deposito.fraseLocale())
         WidgetCenter.shared.reloadAllTimelines()
 
         let rimaste = candidate.count - 1
@@ -164,8 +164,8 @@ struct CompletaProssima: AppIntent {
 // MARK: - Registra il mood
 
 struct RegistraMood: AppIntent {
-    static var title: LocalizedStringResource = "Registra come sto"
-    static var description = IntentDescription("Salva il tuo mood di oggi.")
+    static let title: LocalizedStringResource = "Registra come sto"
+    static let description = IntentDescription("Salva il tuo mood di oggi.")
     static var openAppWhenRun: Bool { false }
 
     @Parameter(title: "Come stai", requestValueDialog: "Come stai oggi?")
@@ -179,7 +179,7 @@ struct RegistraMood: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let deposito = Deposito()
+        let deposito = Deposito.condiviso
         deposito.registra(umore: mood.valore, nota: nil)
 
         let risposta = mood.valore.difficile ? VoceDiNina.moodDifficile() : VoceDiNina.moodPositivo()
@@ -191,9 +191,9 @@ struct RegistraMood: AppIntent {
 enum MoodScelto: String, AppEnum {
     case fantastica, bene, cosiCosi, stanca, giu, nervosa
 
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Mood"
+    static let typeDisplayRepresentation: TypeDisplayRepresentation = "Mood"
 
-    static var caseDisplayRepresentations: [MoodScelto: DisplayRepresentation] = [
+    static let caseDisplayRepresentations: [MoodScelto: DisplayRepresentation] = [
         .fantastica: "Fantastica",
         .bene: "Bene",
         .cosiCosi: "Così così",

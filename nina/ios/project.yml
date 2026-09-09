@@ -89,6 +89,28 @@ targets:
     platform: iOS
     sources:
       - path: NinaWidgets
+
+      # Un'estensione è un binario a sé: non vede il codice dell'app, va
+      # compilata anche lei. Questi sono i file che le servono davvero, e
+      # nient'altro — l'elenco è la chiusura delle dipendenze a partire da
+      # ciò che NinaWidgets.swift usa.
+      #
+      # Attenzione: `Deposito` compare qui perché lo cita `SpuntaAttivita`,
+      # l'intent del bottone. Compilarlo nell'estensione NON significa che il
+      # widget apra il database: quel codice nell'estensione non viene mai
+      # eseguito, perché gli App Intent dei widget girano nel processo
+      # dell'app. Il widget legge solo la fotografia in `DatiCondivisi`.
+      - path: Nina/Models/Dominio.swift
+      - path: Nina/Models/ModelliLocali.swift
+      - path: Nina/Persistence/Deposito.swift
+      - path: Nina/Core/CalendarioNina.swift
+      - path: Nina/Core/VoceDiNina.swift
+      - path: Nina/Core/DatiCondivisi.swift
+      - path: Nina/Intents/IntentiNina.swift
+      - path: Nina/DesignSystem/Palette.swift
+      - path: Nina/DesignSystem/Spazi.swift
+      - path: Nina/DesignSystem/Tipografia.swift
+      - path: Nina/DesignSystem/Componenti.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: it.nina.app.widgets

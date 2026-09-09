@@ -92,13 +92,48 @@ struct ProviderNina: TimelineProvider {
     }
 }
 
+// MARK: - Il fondo del contenitore
+
+private struct FondoNina: ViewModifier {
+    @Environment(\.widgetFamily) private var famiglia
+
+    private var suSchermataDiBlocco: Bool {
+        famiglia == .accessoryCircular
+            || famiglia == .accessoryRectangular
+            || famiglia == .accessoryInline
+    }
+
+    func body(content: Content) -> some View {
+        content.containerBackground(for: .widget) {
+            if suSchermataDiBlocco {
+                EmptyView()
+            } else {
+                Palette.sfondo
+            }
+        }
+    }
+}
+
+extension View {
+    /// Applica `containerBackground`, che WidgetKit pretende su ogni widget:
+    /// senza, il widget è bianco nella galleria e il sistema non può
+    /// sostituire il fondo nelle modalità colorate.
+    ///
+    /// Sul lock screen però il fondo deve restare **vuoto**, altrimenti copre
+    /// lo sfondo scelto dalla persona e il widget sembra una toppa incollata
+    /// sopra la foto. Ometterlo del tutto non è la soluzione: in quel caso il
+    /// sistema ne mette uno opaco di suo. Va dichiarato, e vuoto.
+    func fondoNina() -> some View {
+        modifier(FondoNina())
+    }
+}
+
 // MARK: - Widget piccolo: "Oggi 💗"
 
 struct WidgetGiornata: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: TipiWidget.giornata, provider: ProviderNina()) { voce in
             VistaGiornata(fotografia: voce.fotografia)
-                .containerBackground(for: .widget) { Palette.sfondo }
         }
         .configurationDisplayName("Oggi")
         .description("Quante cose hai fatto oggi, a colpo d'occhio.")
@@ -116,11 +151,17 @@ private struct VistaGiornata: View {
     }
 
     var body: some View {
+        contenuto.fondoNina()
+    }
+
+    @ViewBuilder
+    private var contenuto: some View {
         switch famiglia {
         case .accessoryCircular:
-            // Sul lock screen il fondo deve lasciar vedere lo sfondo: si passa
-            // un containerBackground vuoto (fatto sopra dal widget) e si usa
-            // AccessoryWidgetBackground.
+            // Sul lock screen il fondo del contenitore resta vuoto (ci pensa
+            // `fondoNina()`), e la pastiglia dietro al gauge la disegna
+            // AccessoryWidgetBackground: è quella che il sistema sa adattare
+            // allo sfondo scelto dalla persona.
             ZStack {
                 AccessoryWidgetBackground()
                 Gauge(value: percentuale) {
@@ -289,7 +330,6 @@ struct WidgetPensiero: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: TipiWidget.pensiero, provider: ProviderNina()) { voce in
             VistaPensiero(fotografia: voce.fotografia)
-                .containerBackground(for: .widget) { Palette.sfondo }
         }
         .configurationDisplayName("Pensiero del giorno")
         .description("La frase di oggi, sempre sotto gli occhi.")
@@ -302,6 +342,11 @@ private struct VistaPensiero: View {
     @Environment(\.widgetFamily) private var famiglia
 
     var body: some View {
+        contenuto.fondoNina()
+    }
+
+    @ViewBuilder
+    private var contenuto: some View {
         if famiglia == .accessoryRectangular {
             VStack(alignment: .leading, spacing: 1) {
                 Text("Pensiero di oggi")

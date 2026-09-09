@@ -20,7 +20,7 @@ struct NinaApp: App {
             Sessione.azzeraStatoPerTest()
         }
 
-        let deposito = Deposito()
+        let deposito = Deposito.condiviso
         let sync = MotoreSync(deposito: deposito)
         let sessione = Sessione(deposito: deposito, sync: sync)
 
