@@ -110,26 +110,60 @@ correttezza non dipende mai da SSE.
 ### Risoluzione dei conflitti
 
 Ogni riga ha `version` (intero, incrementato dal trigger) e `client_updated_at`
-(quando la modifica è avvenuta *sul dispositivo*).
+(quando la modifica è avvenuta *sul dispositivo*), più `last_device_id`.
 
-Quando il client invia una modifica manda anche `base_version` — la versione su
-cui si è basato:
+La decisione è **una sola espressione SQL**, valutata dentro la `WHERE` di una
+`UPDATE`. Il vincitore lo sceglie il database, in modo atomico: non c'è nessuna
+finestra fra "leggo la versione attuale" e "scrivo la mia".
 
-| Situazione | Comportamento del server |
-|---|---|
-| `base_version` == versione sul server | Applica. È il caso normale. |
-| `base_version` < versione sul server, e `client_updated_at` del client è **più recente** | Applica: la modifica del client è genuinamente successiva. |
-| `base_version` < versione sul server, e `client_updated_at` del client è **più vecchio** | Rifiuta e restituisce la riga autorevole. Il client la adotta. |
-| `client_updated_at` identici | Vince l'`device_id` alfabeticamente maggiore. |
+```sql
+UPDATE tasks
+   SET ...
+ WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL
+   AND (    $3::timestamptz >  client_updated_at
+         OR ($3::timestamptz =  client_updated_at
+             AND COALESCE($4, '') > COALESCE(last_device_id, '')) )
+```
 
-L'ultima riga esiste perché il criterio deve essere **deterministico**: due
-dispositivi che risolvono lo stesso conflitto devono arrivare alla stessa
-conclusione senza parlarsi. Nessuna scrittura viene mai persa silenziosamente:
-la risposta di `/sync/push` contiene sempre lo stato autorevole di ogni riga
-inviata, e il client riallinea la propria copia.
+In parole:
 
-Le cancellazioni vincono sempre sulle modifiche concorrenti (una riga cancellata
-resta cancellata), scelta prevedibile e facile da spiegare all'utente.
+| Situazione | Comportamento del server | Esito |
+|---|---|---|
+| La riga non esiste ancora per questo utente | La inserisce. È un elemento creato offline che arriva per la prima volta. | `applied` |
+| `client_updated_at` in arrivo è **più recente** di quello sul server | Applica. | `applied` |
+| `client_updated_at` in arrivo è **più vecchio** | Rifiuta e restituisce la riga autorevole, che il dispositivo adotta. | `rejected` |
+| I due `client_updated_at` sono **identici** | Vince il `device_id` alfabeticamente maggiore. | `applied` o `rejected` |
+| La riga sul server è **cancellata** (`deleted_at` non nullo) | Rifiuta: la cancellazione vince sempre. Non si "resuscita" niente. | `rejected` |
+| Il payload non contiene nessun campo riconosciuto | Non tocca niente e restituisce lo stato attuale. | `ignored` |
+| L'id esiste ma appartiene a un altro account, o mancano campi obbligatori per una riga nuova | Rifiuta quella singola riga; le altre del lotto proseguono. `server` è `null`, quindi chi ha spinto la modifica non scopre nemmeno che quell'id esiste. | `rejected` |
+
+Due note su come è implementato, perché non sono ovvie.
+
+**Non si usa `INSERT ... ON CONFLICT (id) DO UPDATE`.** PostgreSQL valida i
+vincoli `NOT NULL` del ramo `INSERT` *anche quando* la riga esiste già e verrà
+soltanto aggiornata. Siccome il caso normale è un aggiornamento parziale — il
+dispositivo manda solo i campi che ha cambiato — ogni singolo push fallirebbe su
+ogni colonna obbligatoria non inclusa. Quindi: prima `UPDATE`, e solo se non ha
+toccato righe si guarda se la riga esiste, per distinguere "non c'è ancora" da
+"ha perso il conflitto".
+
+**L'`INSERT` finale sta dentro un `SAVEPOINT`.** Se fallisce (id di un altro
+utente, campi obbligatori mancanti) la transazione sarebbe inutilizzabile e
+l'intero lotto andrebbe perso, comprese le modifiche valide. Il rollback al
+savepoint rifiuta quella riga sola e lascia proseguire le altre.
+
+`base_version` viaggia nel payload ma **non partecipa alla decisione**: serve
+solo a raccontare l'esito nei log e a un'eventuale diagnostica. Il criterio
+autorevole è l'istante della modifica sul dispositivo, perché è l'unica cosa
+che ha un significato per la persona che l'ha fatta.
+
+Nessuna scrittura viene mai persa in silenzio: la risposta di `/sync/push`
+contiene un esito per ogni riga inviata e, tranne nel caso dell'id altrui, lo
+stato autorevole che il dispositivo adotta. Un dispositivo rifiutato non
+ritenta all'infinito: si riallinea.
+
+I test che coprono tutto questo stanno in
+`backend/tests/integration/sync.test.ts`.
 
 ## Sicurezza — le decisioni
 
