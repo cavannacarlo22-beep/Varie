@@ -214,10 +214,23 @@ export async function login(
 // Refresh — con rotazione e rilevamento del riuso
 // ---------------------------------------------------------------------------
 
+/**
+ * L'esito della transazione di refresh.
+ *
+ * Il riuso di un token non può essere gestito dentro la transazione: la
+ * reazione è revocare la famiglia *e* rifiutare la richiesta, ma lanciare
+ * l'errore farebbe fare ROLLBACK anche alla revoca, e i token rubati
+ * resterebbero validi. Quindi la transazione si limita a riconoscere il caso e
+ * a uscire; la revoca avviene fuori, dove niente può annullarla.
+ */
+type EsitoRefresh =
+  | { riuso: true; userId: string; familyId: string }
+  | { riuso: false; sessione: AuthResult };
+
 export async function refresh(refreshToken: string, context: SessionContext): Promise<AuthResult> {
   const tokenHash = hashRefreshToken(refreshToken);
 
-  return withTransaction(async (client) => {
+  const esito = await withTransaction<EsitoRefresh>(async (client) => {
     const stored = await tokens.findRefreshToken(tokenHash, client);
 
     if (!stored) {
@@ -232,16 +245,7 @@ export async function refresh(refreshToken: string, context: SessionContext): Pr
     // rubata, o è un client che ha ritentato dopo aver perso la risposta. In
     // entrambi i casi la reazione sicura è la stessa: buttare via la catena.
     if (stored.used_at) {
-      const revoked = await tokens.revokeTokenFamily(stored.family_id, 'reuse_detected', client);
-      logger.warn(
-        { userId: stored.user_id, familyId: stored.family_id, revoked },
-        'Riuso di un refresh token: famiglia revocata',
-      );
-      throw new AppError(
-        401,
-        'TOKEN_REUSED',
-        'Per sicurezza abbiamo chiuso questa sessione. Accedi di nuovo.',
-      );
+      return { riuso: true, userId: stored.user_id, familyId: stored.family_id };
     }
 
     if (stored.expires_at.getTime() <= Date.now()) {
@@ -257,8 +261,24 @@ export async function refresh(refreshToken: string, context: SessionContext): Pr
     await tokens.markRefreshTokenUsed(stored.id, client);
 
     // Il nuovo token resta nella stessa famiglia: la catena è tracciabile.
-    return issueSession(user, context, stored.family_id, client);
+    return { riuso: false, sessione: await issueSession(user, context, stored.family_id, client) };
   });
+
+  if (!esito.riuso) return esito.sessione;
+
+  // Fuori dalla transazione: questa scrittura deve restare anche se subito
+  // dopo rifiutiamo la richiesta.
+  const revocati = await tokens.revokeTokenFamily(esito.familyId, 'reuse_detected');
+  logger.warn(
+    { userId: esito.userId, familyId: esito.familyId, revocati },
+    'Riuso di un refresh token: famiglia revocata',
+  );
+
+  throw new AppError(
+    401,
+    'TOKEN_REUSED',
+    'Per sicurezza abbiamo chiuso questa sessione. Accedi di nuovo.',
+  );
 }
 
 // ---------------------------------------------------------------------------

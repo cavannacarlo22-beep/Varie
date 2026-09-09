@@ -141,6 +141,15 @@ export const config = {
     timeoutMs: integer('AI_TIMEOUT_MS', 20_000),
   },
 
+  rateLimit: {
+    // Limite generale per utente (o per IP se non autenticato).
+    max: integer('RATE_LIMIT_MAX', 300),
+    // Limite più stretto sulle rotte di autenticazione: sono il bersaglio
+    // naturale di chi prova password a raffica.
+    authMax: integer('RATE_LIMIT_AUTH_MAX', 10),
+    finestra: optional('RATE_LIMIT_WINDOW', '1 minute'),
+  },
+
   sync: {
     // Quante righe al massimo restituisce una singola pagina di /sync/changes.
     maxChangesPerPage: integer('SYNC_MAX_CHANGES', 500),

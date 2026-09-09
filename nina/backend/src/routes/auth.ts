@@ -2,6 +2,7 @@
 
 import { Type } from "@sinclair/typebox";
 import type { FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
+import { config } from "../config.js";
 import * as auth from "../services/authService.js";
 import {
   currentUserId,
@@ -57,9 +58,19 @@ const OkResponse = Type.Object({ ok: Type.Boolean() });
 export const authRoutes: FastifyPluginAsyncTypebox = async (app) => {
   // Le rotte di autenticazione hanno un limite più stretto delle altre: sono
   // il bersaglio naturale di chi prova password a raffica. Il limite si
-  // dichiara per rotta (`config.rateLimit`); il plugin è già registrato a
-  // livello di applicazione.
-  const strictLimit = { rateLimit: { max: 10, timeWindow: "1 minute" } };
+  // dichiara per rotta (la chiave `rateLimit` dentro `config` della rotta); il
+  // plugin è già registrato a livello di applicazione.
+  //
+  // I valori arrivano dalla configurazione e non sono scritti qui dentro: i
+  // test hanno bisogno di alzarli (altrimenti si bloccherebbero da soli dopo
+  // dieci registrazioni) e tests/integration/limiti.test.ts di abbassarli per
+  // verificare che il blocco scatti davvero.
+  const strictLimit = {
+    rateLimit: {
+      max: config.rateLimit.authMax,
+      timeWindow: config.rateLimit.finestra,
+    },
+  };
 
   app.post(
     "/register",

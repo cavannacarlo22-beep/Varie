@@ -37,7 +37,6 @@ export async function buildApp(): Promise<FastifyInstance> {
     // perché il rate limit veda l'IP vero e non quello del load balancer.
     trustProxy: config.isProduction,
     bodyLimit: 1_048_576, // 1 MB: il diario più lungo del mondo ci sta comodo.
-    disableRequestLogging: config.isTest,
   }).withTypeProvider<TypeBoxTypeProvider>();
 
   registerErrorHandler(app);
@@ -80,8 +79,8 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   // Limite generale. Le rotte di autenticazione ne hanno uno più stretto.
   await app.register(rateLimit, {
-    max: 300,
-    timeWindow: '1 minute',
+    max: config.rateLimit.max,
+    timeWindow: config.rateLimit.finestra,
     // Contare per utente autenticato invece che per IP: due persone sulla
     // stessa rete di casa non si rubano il limite a vicenda.
     keyGenerator: (request) => request.auth?.sub ?? request.ip,

@@ -256,10 +256,9 @@ async function applyOne(
     };
   }
 
-  // La riga non c'è: è un elemento creato offline che arriva per la prima
-  // volta. Qui l'INSERT deve contenere tutti i campi obbligatori, e se non li
-  // contiene è giusto che fallisca: significa che il client ha mandato un
-  // aggiornamento parziale per qualcosa che il server non ha mai visto.
+  // La riga non c'è *per questo utente*: o è un elemento creato offline che
+  // arriva per la prima volta, o quell'id appartiene a qualcun altro (la
+  // chiave primaria è globale, la lettura è filtrata per user_id).
   const insertColumns = ['id', 'user_id', 'client_updated_at', 'last_device_id', ...columns];
   const insertValues: SqlQuery[] = [
     sql`${item.id}`,
@@ -269,13 +268,42 @@ async function applyOne(
     ...values,
   ];
 
-  const inserted = await queryOne<Row>(
-    sql`INSERT INTO ${table} (${raw(insertColumns.join(', '))})
-        VALUES (${join(insertValues, ', ')})
-        ON CONFLICT (id) DO NOTHING
-        RETURNING ${selectList(item.entity)}`,
-    client,
-  );
+  // L'INSERT è l'unico punto in cui una singola modifica può far fallire il
+  // database: mancano campi obbligatori perché il dispositivo ha mandato un
+  // aggiornamento parziale di qualcosa che il server non ha mai visto, oppure
+  // quell'id esiste già e non è di questo utente.
+  //
+  // In un motore di sincronizzazione questo non deve buttare via l'intero
+  // lotto: le altre modifiche del dispositivo sono valide e devono entrare.
+  // Il SAVEPOINT serve proprio a questo — dopo un errore la transazione
+  // sarebbe inutilizzabile, e il rollback al savepoint la rimette in piedi
+  // senza annullare ciò che è già stato applicato.
+  await client.query('SAVEPOINT nina_sync_insert');
+
+  let inserted: Row | undefined;
+  try {
+    inserted = await queryOne<Row>(
+      sql`INSERT INTO ${table} (${raw(insertColumns.join(', '))})
+          VALUES (${join(insertValues, ', ')})
+          ON CONFLICT (id) DO NOTHING
+          RETURNING ${selectList(item.entity)}`,
+      client,
+    );
+    await client.query('RELEASE SAVEPOINT nina_sync_insert');
+  } catch (error) {
+    await client.query('ROLLBACK TO SAVEPOINT nina_sync_insert');
+    if (!riguardaSoloQuestaRiga(error)) throw error;
+
+    // `readRow` è filtrata per utente: se l'id è di un'altra persona qui esce
+    // null, e chi ha spinto la modifica non vede nemmeno che esiste.
+    return {
+      entity: item.entity,
+      id: item.id,
+      outcome: 'rejected',
+      server: await readRow(item.entity, userId, item.id, client),
+      reason: motivoDelRifiuto(error),
+    };
+  }
 
   if (inserted) {
     return {
@@ -296,6 +324,37 @@ async function applyOne(
     server: await readRow(item.entity, userId, item.id, client),
     reason: 'elemento inserito contemporaneamente da un altro dispositivo',
   };
+}
+
+/** Il codice SQLSTATE di un errore di PostgreSQL, se è uno di quelli. */
+function codicePostgres(error: unknown): string | undefined {
+  if (typeof error !== 'object' || error === null) return undefined;
+  const code = (error as { code?: unknown }).code;
+  return typeof code === 'string' ? code : undefined;
+}
+
+/**
+ * Distingue "questa singola modifica non è accettabile" da "il database ha un
+ * problema".
+ *
+ * Le classi 22 (dati non validi) e 23 (vincoli violati) di PostgreSQL sono
+ * sempre il primo caso. Alcune di esse `translateDatabaseError` le ha già
+ * trasformate in AppError con stato 400 o 409: anche quelle sono rifiuti della
+ * singola riga. Tutto il resto — connessione caduta, timeout, errore di
+ * sintassi — deve continuare a propagarsi e far fallire la richiesta.
+ */
+function riguardaSoloQuestaRiga(error: unknown): boolean {
+  const code = codicePostgres(error);
+  if (code !== undefined && (code.startsWith('22') || code.startsWith('23'))) return true;
+  return error instanceof AppError && (error.statusCode === 400 || error.statusCode === 409);
+}
+
+/** Un motivo comprensibile, senza rivelare niente di chi possiede l'id. */
+function motivoDelRifiuto(error: unknown): string {
+  if (codicePostgres(error) === '23502') {
+    return 'mancano dei campi obbligatori: il server non conosce questo elemento';
+  }
+  return 'la modifica non rispetta i vincoli del server';
 }
 
 async function readRow(

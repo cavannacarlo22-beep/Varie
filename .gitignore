@@ -8,3 +8,43 @@ __pycache__/
 # OS noise
 .DS_Store
 Thumbs.db
+
+# ---------------------------------------------------------------------------
+# Nina
+# ---------------------------------------------------------------------------
+
+# Segreti. Il file .env contiene la stringa di connessione a Neon e i segreti
+# JWT: non entra nel repository per nessun motivo. Quello che si condivide è
+# .env.example, che ha solo i nomi delle variabili.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+*.certSigningRequest
+
+# Node
+node_modules/
+dist/
+coverage/
+*.log
+
+# Xcode: il progetto si genera con XcodeGen da project.yml, quindi il file
+# .xcodeproj è un artefatto e non va versionato (è anche la causa numero uno
+# dei conflitti di merge nei progetti iOS).
+*.xcodeproj/
+*.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+.swiftpm/
+Packages/
+*.ipa
+*.dSYM.zip
+*.dSYM
