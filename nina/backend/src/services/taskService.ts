@@ -119,12 +119,15 @@ export function occurrenceDates(
   return dates;
 }
 
-interface TaskInput {
-  [key: string]: unknown;
+/**
+ * Ciò che serve a questo servizio per creare un'attività. Gli altri campi
+ * passano attraverso senza essere letti qui, quindi il tipo resta aperto.
+ */
+export interface TaskInput extends Record<string, unknown> {
   title: string;
   date: string;
-  repeatType?: RepeatType;
-  repeatDays?: number[];
+  repeatType?: string;
+  repeatDays?: readonly number[];
   repeatUntil?: string | null;
 }
 
@@ -132,21 +135,21 @@ interface TaskInput {
  * Crea un'attività. Se è ricorrente crea anche le occorrenze future.
  * Restituisce sempre la prima occorrenza, quella che l'utente ha appena scritto.
  */
-export async function createTask(
+export async function createTask<T = crud.ApiObject>(
   userId: string,
   deviceId: string | null,
   input: TaskInput,
-): Promise<crud.ApiObject> {
+): Promise<T> {
   const repeatType = (input.repeatType ?? 'NEVER') as RepeatType;
 
   if (repeatType === 'NEVER') {
-    return crud.create('tasks', userId, deviceId, input);
+    return crud.create<T>('tasks', userId, deviceId, input);
   }
 
   const seriesId = randomUUID();
 
   return withTransaction(async (client) => {
-    const first = await crud.create(
+    const first = await crud.create<T>(
       'tasks',
       userId,
       deviceId,
@@ -157,7 +160,7 @@ export async function createTask(
     const dates = occurrenceDates(
       input.date,
       repeatType,
-      input.repeatDays ?? [],
+      [...(input.repeatDays ?? [])],
       input.repeatUntil ?? null,
       input.date,
     );

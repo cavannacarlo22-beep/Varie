@@ -1,6 +1,6 @@
 // FILE: backend/src/routes/tasks.ts
 
-import { Type } from '@sinclair/typebox';
+import { Type, type Static } from '@sinclair/typebox';
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
 import { sql } from '../db/sql.js';
 import * as crud from '../repositories/crudRepository.js';
@@ -16,6 +16,7 @@ import {
   TaskUpdateSchema,
 } from './schemas.js';
 
+type Task = Static<typeof TaskSchema>;
 export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
   app.addHook('preHandler', requireAuth);
 
@@ -57,7 +58,7 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
       }
       if (includeCompleted === false) conditions.push(sql`is_completed = FALSE`);
 
-      const items = await crud.listForUser('tasks', userId, {
+      const items = await crud.listForUser<Task>('tasks', userId, {
         extraConditions: conditions,
         limit,
         offset,
@@ -78,7 +79,7 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
         response: { 200: TaskSchema },
       },
     },
-    async (request) => crud.requireById('tasks', currentUserId(request), request.params.id),
+    async (request) => crud.requireById<Task>('tasks', currentUserId(request), request.params.id),
   );
 
   app.post(
@@ -99,7 +100,7 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
       const userId = currentUserId(request);
       const deviceId = deviceIdOf(request);
 
-      const created = await taskService.createTask(userId, deviceId, request.body);
+      const created = await taskService.createTask<Task>(userId, deviceId, request.body);
       notifyAfterWrite(userId, deviceId);
 
       return reply.status(201).send(created);
@@ -131,11 +132,11 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
       if (request.query.scope === 'series') {
         await taskService.updateSeriesFrom(userId, deviceId, request.params.id, request.body);
       } else {
-        await crud.update('tasks', userId, deviceId, request.params.id, request.body);
+        await crud.update<Task>('tasks', userId, deviceId, request.params.id, request.body);
       }
 
       notifyAfterWrite(userId, deviceId);
-      return crud.requireById('tasks', userId, request.params.id);
+      return crud.requireById<Task>('tasks', userId, request.params.id);
     },
   );
 
@@ -158,7 +159,7 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
 
       // `completed_at` e `is_completed` devono restare coerenti: un vincolo del
       // database lo impone, quindi si impostano sempre insieme.
-      const updated = await crud.update('tasks', userId, deviceId, request.params.id, {
+      const updated = await crud.update<Task>('tasks', userId, deviceId, request.params.id, {
         isCompleted: completed,
         completedAt: completed ? new Date().toISOString() : null,
       });
@@ -186,7 +187,7 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
     async (request) => {
       const userId = currentUserId(request);
       const deviceId = deviceIdOf(request);
-      const existing = await crud.requireById('tasks', userId, request.params.id);
+      const existing = await crud.requireById<Task>('tasks', userId, request.params.id);
 
       let newDate = request.body.date;
       if (!newDate) {
@@ -195,7 +196,7 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
         newDate = base.toISOString().slice(0, 10);
       }
 
-      const updated = await crud.update('tasks', userId, deviceId, request.params.id, {
+      const updated = await crud.update<Task>('tasks', userId, deviceId, request.params.id, {
         date: newDate,
       });
 
@@ -219,9 +220,9 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
     async (request, reply) => {
       const userId = currentUserId(request);
       const deviceId = deviceIdOf(request);
-      const source = await crud.requireById('tasks', userId, request.params.id);
+      const source = await crud.requireById<Task>('tasks', userId, request.params.id);
 
-      const copy = await crud.create('tasks', userId, deviceId, {
+      const copy = await crud.create<Task>('tasks', userId, deviceId, {
         title: source['title'],
         description: source['description'],
         date: request.body.date ?? source['date'],
@@ -266,7 +267,7 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
       const deleted =
         request.query.scope === 'series'
           ? await taskService.deleteSeriesFrom(userId, deviceId, request.params.id)
-          : (await crud.softDelete('tasks', userId, deviceId, request.params.id), 1);
+          : (await crud.softDelete<Task>('tasks', userId, deviceId, request.params.id), 1);
 
       notifyAfterWrite(userId, deviceId);
       return { ok: true, deleted };
@@ -296,7 +297,7 @@ export const taskRoutes: FastifyPluginAsyncTypebox = async (app) => {
       const userId = currentUserId(request);
       const date = request.query.date ?? new Date().toISOString().slice(0, 10);
 
-      const items = await crud.listForUser('tasks', userId, {
+      const items = await crud.listForUser<Task>('tasks', userId, {
         extraConditions: [sql`date = ${date}`],
         limit: 200,
       });

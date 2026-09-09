@@ -14,6 +14,16 @@ import type { SyncEntity } from '../types/domain.js';
 import { ENTITIES, fieldByApiName, orderBy, rowToApi, selectList, tableName } from './entities.js';
 
 type Row = Record<string, unknown>;
+
+/**
+ * Forma di un oggetto restituito dalle API.
+ *
+ * Le funzioni di questo file sono generiche su `T`: chi chiama dichiara il tipo
+ * che si aspetta (di solito il `Static<typeof XSchema>` dello schema della
+ * rotta). Non è una verifica: la garanzia vera è che Fastify valida la risposta
+ * contro lo stesso schema prima di spedirla. Il parametro serve a far
+ * combaciare i tipi al confine, senza spargere cast nelle rotte.
+ */
 export type ApiObject = Record<string, unknown>;
 
 export interface ListOptions {
@@ -24,12 +34,12 @@ export interface ListOptions {
   orderOverride?: string;
 }
 
-export async function listForUser(
+export async function listForUser<T = ApiObject>(
   entity: SyncEntity,
   userId: string,
   options: ListOptions = {},
   client?: DbClient,
-): Promise<ApiObject[]> {
+): Promise<T[]> {
   const conditions: SqlQuery[] = [sql`user_id = ${userId}`];
 
   if (!options.includeDeleted && ENTITIES[entity].softDeletable) {
@@ -53,35 +63,35 @@ export async function listForUser(
     client,
   );
 
-  return rows.map((row) => rowToApi(entity, row));
+  return rows.map((row) => rowToApi(entity, row) as T);
 }
 
-export async function findById(
+export async function findById<T = ApiObject>(
   entity: SyncEntity,
   userId: string,
   id: string,
   client?: DbClient,
-): Promise<ApiObject | undefined> {
+): Promise<T | undefined> {
   const row = await queryOne<Row>(
     sql`SELECT ${selectList(entity)}
           FROM ${tableName(entity)}
          WHERE id = ${id} AND user_id = ${userId}`,
     client,
   );
-  return row ? rowToApi(entity, row) : undefined;
+  return row ? (rowToApi(entity, row) as T) : undefined;
 }
 
-export async function requireById(
+export async function requireById<T = ApiObject>(
   entity: SyncEntity,
   userId: string,
   id: string,
   client?: DbClient,
-): Promise<ApiObject> {
-  const found = await findById(entity, userId, id, client);
+): Promise<T> {
+  const found = await findById<ApiObject>(entity, userId, id, client);
   if (!found || found['deletedAt'] !== null) {
     throw AppError.notFound(`Non abbiamo trovato questo elemento fra le tue ${ENTITIES[entity].label}.`);
   }
-  return found;
+  return found as T;
 }
 
 /**
@@ -107,13 +117,13 @@ function toColumns(
   return { columns, values };
 }
 
-export async function create(
+export async function create<T = ApiObject>(
   entity: SyncEntity,
   userId: string,
   deviceId: string | null,
   input: ApiObject,
   client?: DbClient,
-): Promise<ApiObject> {
+): Promise<T> {
   const { columns, values } = toColumns(entity, input);
 
   const columnList = ['user_id', 'client_updated_at', 'last_device_id', ...columns];
@@ -141,21 +151,21 @@ export async function create(
   );
 
   if (!row) throw AppError.internal();
-  return rowToApi(entity, row);
+  return rowToApi(entity, row) as T;
 }
 
-export async function update(
+export async function update<T = ApiObject>(
   entity: SyncEntity,
   userId: string,
   deviceId: string | null,
   id: string,
   input: ApiObject,
   client?: DbClient,
-): Promise<ApiObject> {
+): Promise<T> {
   const { columns, values } = toColumns(entity, input);
 
   if (columns.length === 0) {
-    return requireById(entity, userId, id, client);
+    return requireById<T>(entity, userId, id, client);
   }
 
   const assignments: SqlQuery[] = columns.map((column, index) =>
@@ -177,7 +187,7 @@ export async function update(
   if (!row) {
     throw AppError.notFound(`Non abbiamo trovato questo elemento fra le tue ${ENTITIES[entity].label}.`);
   }
-  return rowToApi(entity, row);
+  return rowToApi(entity, row) as T;
 }
 
 /**
@@ -187,13 +197,13 @@ export async function update(
  * l'elemento è stato cancellato: una riga sparita non genererebbe nessun
  * sync_seq e resterebbe visibile sull'iPad per sempre.
  */
-export async function softDelete(
+export async function softDelete<T = ApiObject>(
   entity: SyncEntity,
   userId: string,
   deviceId: string | null,
   id: string,
   client?: DbClient,
-): Promise<ApiObject> {
+): Promise<T> {
   if (!ENTITIES[entity].softDeletable) {
     throw AppError.validation('Questo elemento non si può eliminare.');
   }
@@ -211,7 +221,7 @@ export async function softDelete(
   if (!row) {
     throw AppError.notFound(`Non abbiamo trovato questo elemento fra le tue ${ENTITIES[entity].label}.`);
   }
-  return rowToApi(entity, row);
+  return rowToApi(entity, row) as T;
 }
 
 /** Elimina definitivamente le righe cancellate da più di 90 giorni. */

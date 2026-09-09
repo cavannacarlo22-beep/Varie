@@ -192,70 +192,109 @@ async function applyOne(
     };
   }
 
-  const insertColumns = ['id', 'user_id', 'client_updated_at', 'last_device_id', ...columns];
-  const insertValues: SqlQuery[] = [
-    sql`${item.id}`,
-    sql`${userId}`,
-    sql`${item.clientUpdatedAt}`,
-    sql`${deviceId}`,
-    ...values,
-  ];
+  const table = tableName(item.entity);
+  const stamp = sql`${item.clientUpdatedAt}::timestamptz`;
 
-  const assignments = columns.map((column) => sql`${raw(column)} = EXCLUDED.${raw(column)}`);
-  assignments.push(sql`client_updated_at = EXCLUDED.client_updated_at`);
-  assignments.push(sql`last_device_id = EXCLUDED.last_device_id`);
-
-  const table = raw(spec.table);
-
-  // La clausola che decide i conflitti.
+  // La regola dei conflitti, espressa sulla riga già presente:
   //
-  //  1. la riga deve appartenere a chi sta scrivendo;
-  //  2. una riga cancellata resta cancellata (la cancellazione vince sempre);
-  //  3. vince la modifica avvenuta più tardi sul dispositivo;
-  //  4. a parità esatta di istante decide l'id del dispositivo, così due
+  //  1. una riga cancellata resta cancellata (la cancellazione vince sempre);
+  //  2. vince la modifica avvenuta più tardi sul dispositivo;
+  //  3. a parità esatta di istante decide l'id del dispositivo, così due
   //     dispositivi che risolvono lo stesso conflitto senza parlarsi arrivano
   //     comunque alla stessa conclusione.
-  const conflictRule = spec.softDeletable
-    ? sql`${table}.user_id = ${userId}
-          AND ${table}.deleted_at IS NULL
-          AND ( EXCLUDED.client_updated_at > ${table}.client_updated_at
-             OR ( EXCLUDED.client_updated_at = ${table}.client_updated_at
-                  AND COALESCE(EXCLUDED.last_device_id, '') > COALESCE(${table}.last_device_id, '') ) )`
-    : sql`${table}.user_id = ${userId}
-          AND ( EXCLUDED.client_updated_at > ${table}.client_updated_at
-             OR ( EXCLUDED.client_updated_at = ${table}.client_updated_at
-                  AND COALESCE(EXCLUDED.last_device_id, '') > COALESCE(${table}.last_device_id, '') ) )`;
+  const notDeleted = spec.softDeletable ? sql`AND deleted_at IS NULL` : sql``;
 
-  const applied = await queryOne<Row>(
-    sql`INSERT INTO ${table} (${raw(insertColumns.join(', '))})
-        VALUES (${join(insertValues, ', ')})
-        ON CONFLICT (id) DO UPDATE
+  const wins = sql`(
+        ${stamp} > client_updated_at
+     OR ( ${stamp} = client_updated_at
+          AND COALESCE(${deviceId}, '') > COALESCE(last_device_id, '') ) )`;
+
+  const assignments = columns.map((column, index) => sql`${raw(column)} = ${values[index]}`);
+  assignments.push(sql`client_updated_at = ${stamp}`);
+  assignments.push(sql`last_device_id = ${deviceId}`);
+
+  // Primo tentativo: aggiornare la riga esistente.
+  //
+  // Non si usa INSERT ... ON CONFLICT perché PostgreSQL valida i vincoli
+  // NOT NULL della parte INSERT *anche quando* la riga esiste già e verrà
+  // solo aggiornata. Un aggiornamento parziale — il caso normale, il client
+  // manda solo i campi che ha cambiato — fallirebbe su ogni colonna
+  // obbligatoria che non ha incluso.
+  const updated = await queryOne<Row>(
+    sql`UPDATE ${table}
            SET ${join(assignments, ', ')}
-         WHERE ${conflictRule}
+         WHERE id = ${item.id} AND user_id = ${userId} ${notDeleted}
+           AND ${wins}
         RETURNING ${selectList(item.entity)}`,
     client,
   );
 
-  if (applied) {
+  if (updated) {
     return {
       entity: item.entity,
       id: item.id,
       outcome: 'applied',
-      server: rowToApi(item.entity, applied),
+      server: rowToApi(item.entity, updated),
     };
   }
 
-  // Nessuna riga restituita: la regola dei conflitti ha rifiutato la scrittura.
-  // Restituiamo comunque lo stato autorevole, così il client si riallinea
-  // invece di ritentare all'infinito.
-  const server = await readRow(item.entity, userId, item.id, client);
+  // Nessuna riga aggiornata: o la riga non esiste ancora, o la regola dei
+  // conflitti ha rifiutato la scrittura. Le due cose si distinguono guardando.
+  const existing = await readRow(item.entity, userId, item.id, client);
 
+  if (existing) {
+    // Esiste, ma la modifica in arrivo ha perso. Si restituisce lo stato
+    // autorevole: il client si riallinea invece di ritentare all'infinito.
+    return {
+      entity: item.entity,
+      id: item.id,
+      outcome: 'rejected',
+      server: existing,
+      reason: existing['deletedAt'] !== null
+        ? 'l\'elemento è stato cancellato'
+        : 'sul server c\'è una versione più recente',
+    };
+  }
+
+  // La riga non c'è: è un elemento creato offline che arriva per la prima
+  // volta. Qui l'INSERT deve contenere tutti i campi obbligatori, e se non li
+  // contiene è giusto che fallisca: significa che il client ha mandato un
+  // aggiornamento parziale per qualcosa che il server non ha mai visto.
+  const insertColumns = ['id', 'user_id', 'client_updated_at', 'last_device_id', ...columns];
+  const insertValues: SqlQuery[] = [
+    sql`${item.id}`,
+    sql`${userId}`,
+    stamp,
+    sql`${deviceId}`,
+    ...values,
+  ];
+
+  const inserted = await queryOne<Row>(
+    sql`INSERT INTO ${table} (${raw(insertColumns.join(', '))})
+        VALUES (${join(insertValues, ', ')})
+        ON CONFLICT (id) DO NOTHING
+        RETURNING ${selectList(item.entity)}`,
+    client,
+  );
+
+  if (inserted) {
+    return {
+      entity: item.entity,
+      id: item.id,
+      outcome: 'applied',
+      server: rowToApi(item.entity, inserted),
+    };
+  }
+
+  // DO NOTHING senza righe: fra la lettura e la scrittura qualcun altro ha
+  // inserito questo id. Raro, ma possibile con due dispositivi che spingono
+  // insieme. Si rilegge e si riporta lo stato autorevole.
   return {
     entity: item.entity,
     id: item.id,
     outcome: 'rejected',
-    server,
-    reason: server === null ? 'elemento non tuo o inesistente' : 'sul server c\'è una versione più recente',
+    server: await readRow(item.entity, userId, item.id, client),
+    reason: 'elemento inserito contemporaneamente da un altro dispositivo',
   };
 }
 

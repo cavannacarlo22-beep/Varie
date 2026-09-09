@@ -136,7 +136,7 @@ export const config = {
   ai: {
     provider: aiProvider,
     apiKey: optional('AI_API_KEY'),
-    model: optional('AI_MODEL', 'claude-sonnet-5'),
+    model: optional('AI_MODEL', 'claude-opus-5'),
     dailyMessageLimit: integer('AI_DAILY_MESSAGE_LIMIT', 40),
     timeoutMs: integer('AI_TIMEOUT_MS', 20_000),
   },
