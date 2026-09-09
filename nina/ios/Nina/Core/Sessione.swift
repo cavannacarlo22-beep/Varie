@@ -237,6 +237,19 @@ final class Sessione {
         UserDefaults.standard.removeObject(forKey: Self.chiaveUtente)
     }
 
+    /// Riporta l'app allo stato di prima installazione.
+    ///
+    /// La usano soltanto i test di interfaccia, che la attivano con
+    /// l'argomento di lancio `-ninaAzzera` (vedi `NinaApp.init`). Senza
+    /// qualcosa del genere il secondo giro di test troverebbe l'onboarding già
+    /// visto e la sessione ancora aperta, e proverebbe schermate diverse da
+    /// quelle che crede.
+    static func azzeraStatoPerTest() {
+        UserDefaults.standard.removeObject(forKey: "onboarding-visto")
+        UserDefaults.standard.removeObject(forKey: chiaveUtente)
+        Portachiavi.cancellaSessione()
+    }
+
     // MARK: - Utilità
 
     private func esegui(_ operazione: @escaping () async throws -> Void) async {

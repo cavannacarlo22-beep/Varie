@@ -72,6 +72,11 @@ targets:
         UIBackgroundModes:
           - fetch
         ITSAppUsesNonExemptEncryption: false
+        # Schema usato dai widget per aprire la schermata giusta.
+        CFBundleURLTypes:
+          - CFBundleURLName: it.nina.app
+            CFBundleURLSchemes:
+              - nina
         NSAppTransportSecurity:
           # In sviluppo il backend gira in HTTP su localhost. In produzione
           # l'indirizzo è HTTPS e questa eccezione non si applica.

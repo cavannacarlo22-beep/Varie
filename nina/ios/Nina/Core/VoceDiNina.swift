@@ -21,16 +21,47 @@ enum VoceDiNina {
 
     // MARK: - Selezione
 
-    /// Ultima frase mostrata per ogni categoria, per non ripeterla subito.
-    private static var ultime: [String: String] = [:]
+    /// Ricorda l'ultima frase mostrata per ogni categoria, per non ripeterla
+    /// due volte di fila.
+    ///
+    /// È una classe con un lucchetto invece di una semplice `static var`
+    /// perché queste frasi non servono solo alle schermate: le usa anche il
+    /// pianificatore delle notifiche e le usano gli App Intent di Siri, che
+    /// non girano sul main actor. Uno stato statico mutabile senza protezione
+    /// sarebbe una corsa critica vera, non un cavillo del compilatore.
+    private final class Memoria: @unchecked Sendable {
+        private let lucchetto = NSLock()
+        private var ultime: [String: String] = [:]
+
+        func scegli(_ categoria: String, da elenco: [String]) -> String {
+            guard elenco.count > 1 else { return elenco.first ?? "" }
+
+            lucchetto.lock()
+            defer { lucchetto.unlock() }
+
+            let disponibili = elenco.filter { $0 != ultime[categoria] }
+            let scelta = disponibili.randomElement() ?? elenco[0]
+            ultime[categoria] = scelta
+            return scelta
+        }
+
+        /// Serve ai test, per partire da una situazione nota.
+        func dimentica() {
+            lucchetto.lock()
+            defer { lucchetto.unlock() }
+            ultime.removeAll()
+        }
+    }
+
+    private static let memoria = Memoria()
 
     private static func scegli(_ categoria: String, da elenco: [String]) -> String {
-        guard elenco.count > 1 else { return elenco.first ?? "" }
+        memoria.scegli(categoria, da: elenco)
+    }
 
-        let disponibili = elenco.filter { $0 != ultime[categoria] }
-        let scelta = disponibili.randomElement() ?? elenco[0]
-        ultime[categoria] = scelta
-        return scelta
+    /// Azzera la memoria delle ultime frasi. Usato solo dai test.
+    static func dimenticaLeUltimeFrasi() {
+        memoria.dimentica()
     }
 
     // MARK: - Buongiorno

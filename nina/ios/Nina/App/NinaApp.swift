@@ -13,6 +13,13 @@ struct NinaApp: App {
     @Environment(\.scenePhase) private var faseScena
 
     init() {
+        // I test di interfaccia partono con `-ninaAzzera` e trovano l'app come
+        // appena installata. Fuori dai test l'argomento non c'è e questa riga
+        // non fa niente.
+        if ProcessInfo.processInfo.arguments.contains("-ninaAzzera") {
+            Sessione.azzeraStatoPerTest()
+        }
+
         let deposito = Deposito()
         let sync = MotoreSync(deposito: deposito)
         let sessione = Sessione(deposito: deposito, sync: sync)
@@ -38,6 +45,7 @@ struct NinaApp: App {
                 .modelContainer(deposito.contenitore)
                 .tint(Palette.rosa)
                 .preferredColorScheme(schemaColore)
+                .onOpenURL { url in apri(url) }
         }
         .onChange(of: faseScena) { _, nuova in
             switch nuova {
@@ -47,12 +55,38 @@ struct NinaApp: App {
                 sync.sincronizza()
                 sync.avviaFlusso()
                 Task { await PianificatoreNotifiche.condiviso.riprogramma(deposito: deposito) }
+
             case .background:
                 sync.fermaFlusso()
+                // Andando in background si riscrive la fotografia per i widget
+                // e si chiede un ultimo giro di sincronizzazione: è il momento
+                // in cui iOS concede ancora qualche secondo di lavoro.
+                aggiornaWidget()
+                sync.sincronizza()
+
             default:
                 break
             }
         }
+    }
+
+    /// Gestisce gli indirizzi `nina://` aperti dai widget.
+    ///
+    /// Per ora tutti portano dentro l'app, che si apre sulla Home: è già la
+    /// schermata giusta per "oggi" e per il pensiero del giorno. Lo schema
+    /// esiste perché aggiungere una destinazione in futuro non richieda di
+    /// ripubblicare i widget.
+    private func apri(_ url: URL) {
+        guard url.scheme == "nina" else { return }
+        sync.sincronizza()
+    }
+
+    private func aggiornaWidget() {
+        DatiCondivisi.aggiorna(
+            deposito: deposito,
+            nome: sessione.nome,
+            frase: deposito.fraseLocale()
+        )
     }
 
     /// Il tema segue le impostazioni salvate, che a loro volta si sincronizzano
