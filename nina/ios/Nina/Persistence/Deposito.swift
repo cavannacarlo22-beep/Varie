@@ -348,12 +348,25 @@ final class Deposito {
 
     // MARK: - Wishlist
 
+    /// I desideri: prima quelli ancora da prendere, poi quelli già acquistati.
+    ///
+    /// L'ordinamento per "acquistato" **non** si può chiedere al database:
+    /// `SortDescriptor` sa ordinare per valori confrontabili, e in Swift `Bool`
+    /// non lo è — non esiste una risposta universale a «true viene prima di
+    /// false?». Al database si chiede quindi solo l'ordine per data, e i due
+    /// gruppi si separano qui, dove la regola è scritta e leggibile.
     func desideri() -> [Desiderio] {
         let richiesta = FetchDescriptor<Desiderio>(
             predicate: #Predicate { $0.deletedAt == nil },
-            sortBy: [SortDescriptor(\.acquistato), SortDescriptor(\.createdAt, order: .reverse)]
+            sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
         )
-        return (try? contesto.fetch(richiesta)) ?? []
+        let tutti = (try? contesto.fetch(richiesta)) ?? []
+
+        // `sorted(by:)` in Swift è stabile: fra due desideri dello stesso
+        // gruppo l'ordine per data arrivato dal database resta intatto.
+        return tutti.sorted { primo, secondo in
+            primo.acquistato == secondo.acquistato ? false : !primo.acquistato
+        }
     }
 
     @discardableResult

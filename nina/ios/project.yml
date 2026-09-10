@@ -39,7 +39,20 @@ settings:
     MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"
     ENABLE_USER_SCRIPT_SANDBOXING: YES
-    SWIFT_STRICT_CONCURRENCY: complete
+
+    # `targeted` e non `complete`.
+    #
+    # Con `complete` ogni singolo `#Predicate` di SwiftData produce una
+    # manciata di avvisi su KeyPath che non è Sendable. Non riguardano il
+    # nostro codice: nascono dentro l'espansione di una macro di Apple, e da
+    # qui non c'è niente da correggere. Il risultato erano centinaia di righe
+    # di rumore in cui il primo errore vero — un ordinamento su un Bool — si
+    # perdeva.
+    #
+    # `targeted` continua a controllare la concorrenza nel codice che
+    # scriviamo noi. È l'impostazione che rende visibili gli errori invece di
+    # seppellirli.
+    SWIFT_STRICT_CONCURRENCY: targeted
     IPHONEOS_DEPLOYMENT_TARGET: "17.0"
 
 targets:

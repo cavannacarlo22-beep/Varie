@@ -79,10 +79,15 @@ jobs:
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
           xcrun simctl list devices | grep "$UDID"
 
-      # Il passo che conta. `-quiet` toglie il rumore e lascia gli errori.
-      # La firma è disattivata: per il simulatore non serve, e senza un account
-      # Apple non sarebbe possibile comunque.
+      # Il passo che conta.
+      #
+      # L'output completo si salva su file e si mostra solo il riassunto degli
+      # errori: la prima volta il log era di novemila righe, quasi tutte avvisi
+      # provenienti dalle macro di SwiftData, e l'unico errore vero stava in
+      # mezzo. Il riassunto finisce anche nella pagina del workflow, così si
+      # legge senza scaricare niente.
       - name: Compila l'app
+        id: compila
         run: |
           set -o pipefail
           xcodebuild build \
@@ -94,7 +99,33 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            -quiet
+            > compilazione.log 2>&1 && ESITO=0 || ESITO=$?
+
+          # Solo le righe di errore, con il percorso accorciato.
+          grep -E "(error|warning): " compilazione.log \
+            | sed 's|/Users/runner/work/Varie/Varie/nina/ios/||' \
+            | sort -u > diagnostica.txt || true
+
+          ERRORI=$(grep -c "error: " diagnostica.txt || true)
+          AVVISI=$(grep -c "warning: " diagnostica.txt || true)
+
+          {
+            echo "## Compilazione"
+            echo ""
+            echo "**$ERRORI errori**, $AVVISI avvisi distinti."
+            if [ "$ERRORI" -gt 0 ]; then
+              echo ""
+              echo '```'
+              grep "error: " diagnostica.txt | head -60
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "───────── errori ─────────"
+          grep "error: " diagnostica.txt | head -60 || echo "(nessuno)"
+          echo "──────────────────────────"
+
+          exit $ESITO
 
       - name: Esegui i test unitari
         run: |
@@ -155,11 +186,12 @@ jobs:
 
       # I log completi servono quando `-quiet` ha nascosto qualcosa di utile.
       - name: Raccogli i log
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: log-compilazione
           path: |
-            nina/ios/build/Logs/**
+            nina/ios/compilazione.log
+            nina/ios/diagnostica.txt
           if-no-files-found: ignore
           retention-days: 7
