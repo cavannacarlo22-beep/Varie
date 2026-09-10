@@ -1,0 +1,165 @@
+# FILE: .github/workflows/nina-ios.yml
+#
+# Costruisce l'app iOS su un Mac di GitHub.
+#
+# Serve a una cosa precisa: qui non c'è nessun Mac, quindi il codice Swift non
+# è mai passato da un compilatore. Questo file affida il lavoro a un Mac vero,
+# in affitto per pochi minuti, che compila l'app e riporta indietro l'elenco
+# degli errori. Per i repository pubblici quei minuti non si pagano.
+#
+# Non tocca il backend: quello ha già i suoi test e girano altrove.
+
+name: App iOS
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'nina/ios/**'
+      - '.github/workflows/nina-ios.yml'
+  workflow_dispatch:
+
+# Un push che arriva mentre il precedente è ancora in corso annulla quello
+# vecchio: interessa sempre e solo l'ultimo stato del codice.
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  costruisci:
+    name: Compila e prova
+    runs-on: macos-latest
+    timeout-minutes: 40
+
+    defaults:
+      run:
+        working-directory: nina/ios
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Cosa c'è su questa macchina. Serve a scegliere Xcode e il simulatore
+      # senza indovinare: i nomi cambiano a ogni aggiornamento dell'immagine.
+      - name: Cosa c'è sul Mac
+        run: |
+          sw_vers
+          echo "--- Xcode disponibili ---"
+          ls /Applications | grep -i '^Xcode' || true
+          echo "--- Xcode in uso ---"
+          xcodebuild -version
+          swift --version
+
+      - name: Installa XcodeGen
+        run: brew install xcodegen
+
+      - name: Genera il progetto
+        run: |
+          xcodegen generate
+          echo "--- schemi e target ---"
+          xcodebuild -list -project Nina.xcodeproj
+
+      # Il nome dei simulatori cambia da un'immagine all'altra ("iPhone 15",
+      # "iPhone 16 Pro"…). Invece di scriverne uno a caso si prende il primo
+      # iPhone disponibile e si usa il suo identificativo.
+      - name: Scegli un simulatore
+        id: simulatore
+        run: |
+          xcrun simctl list devices available
+          UDID=$(xcrun simctl list devices available --json \
+            | python3 -c "
+          import json, sys
+          dati = json.load(sys.stdin)['devices']
+          for runtime in sorted(dati, reverse=True):
+              if 'iOS' not in runtime: continue
+              for d in dati[runtime]:
+                  if d.get('isAvailable') and d['name'].startswith('iPhone'):
+                      print(d['udid']); sys.exit(0)
+          sys.exit('nessun iPhone disponibile')
+          ")
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl list devices | grep "$UDID"
+
+      # Il passo che conta. `-quiet` toglie il rumore e lascia gli errori.
+      # La firma è disattivata: per il simulatore non serve, e senza un account
+      # Apple non sarebbe possibile comunque.
+      - name: Compila l'app
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Nina.xcodeproj \
+            -scheme Nina \
+            -configuration Debug \
+            -destination "id=${{ steps.simulatore.outputs.udid }}" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            -quiet
+
+      - name: Esegui i test unitari
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Nina.xcodeproj \
+            -scheme Nina \
+            -configuration Debug \
+            -destination "id=${{ steps.simulatore.outputs.udid }}" \
+            -derivedDataPath build \
+            -only-testing:NinaTests \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            -quiet
+
+      # Da qui in poi è tutto in più: se qualcosa non riesce, la compilazione
+      # resta comunque verde. Serve a vedere l'app, non a validarla.
+      - name: Avvia l'app e fai gli screenshot
+        continue-on-error: true
+        run: |
+          UDID="${{ steps.simulatore.outputs.udid }}"
+          APP=$(find build/Build/Products -name 'Nina.app' -maxdepth 3 | head -1)
+          echo "App trovata in: $APP"
+
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+
+          # Ora fissa e batteria piena: gli screenshot di Apple sono sempre così,
+          # e una barra di stato che cambia rende le immagini incomparabili.
+          xcrun simctl status_bar "$UDID" override \
+            --time "09:41" --batteryState charged --batteryLevel 100 \
+            --cellularMode active --cellularBars 4 --wifiMode active --wifiBars 3 || true
+
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl launch "$UDID" it.nina.app
+
+          mkdir -p ../../schermate
+          sleep 8
+          xcrun simctl io "$UDID" screenshot ../../schermate/1-avvio.png
+
+          # Modalità scura: è metà del lavoro sul design, va vista.
+          xcrun simctl ui "$UDID" appearance dark || true
+          sleep 3
+          xcrun simctl io "$UDID" screenshot ../../schermate/2-scuro.png
+          xcrun simctl ui "$UDID" appearance light || true
+
+          ls -la ../../schermate
+
+      - name: Raccogli gli screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: schermate
+          path: schermate/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      # I log completi servono quando `-quiet` ha nascosto qualcosa di utile.
+      - name: Raccogli i log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: log-compilazione
+          path: |
+            nina/ios/build/Logs/**
+          if-no-files-found: ignore
+          retention-days: 7
