@@ -25,7 +25,16 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    DEVELOPMENT_TEAM: ""            # ← il tuo Team ID di Apple Developer
+    # Nessun DEVELOPMENT_TEAM qui di proposito.
+    #
+    # Per il simulatore non serve firmare niente: l'app si costruisce e gira
+    # senza alcun account Apple. Lasciare il campo presente ma vuoto è la cosa
+    # peggiore delle due, perché Xcode a volte lo interpreta come «team scelto
+    # e non valido» e mostra un errore di firma che non c'entra niente.
+    #
+    # Per installarla su un iPhone vero il team si sceglie dall'interfaccia di
+    # Xcode (Signing & Capabilities), e da lì viene scritto nelle impostazioni
+    # locali senza toccare questo file.
     CODE_SIGN_STYLE: Automatic
     MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"

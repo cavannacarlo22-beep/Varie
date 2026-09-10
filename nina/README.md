@@ -125,6 +125,9 @@ La documentazione interattiva delle API è su http://localhost:3000/docs.
 
 ### 3. L'app
 
+Per il **simulatore** non serve nessun account Apple e non c'è niente da
+configurare: si apre il progetto e si preme ▶.
+
 Se `avvia.sh` non ha trovato XcodeGen:
 
 ```bash
@@ -186,8 +189,8 @@ manuali.
 | Generare `JWT_SECRET` e `JWT_REFRESH_SECRET` | `backend/.env` | sono segreti: in git sarebbero pubblici |
 | Creare l'amministratrice | `npm run create-admin` | la password non deve esistere in nessun file |
 | Configurare SMTP | `backend/.env` | credenziali di terzi |
-| Impostare il Team ID Apple | `ios/project.yml` | è il tuo account sviluppatore |
-| Cambiare i bundle id e l'App Group | `project.yml`, i due `.entitlements`, `DatiCondivisi.swift` | dipendono da un dominio che controlli |
+| Impostare il Team ID Apple | Xcode → Signing & Capabilities | serve **solo** per installare su un iPhone vero o pubblicare; per il simulatore no |
+| Cambiare i bundle id e l'App Group | `project.yml`, i due `.entitlements`, `DatiCondivisi.swift` | **solo per pubblicare**: dipendono da un dominio che controlli |
 | Puntare l'app al backend vero | `ios/Nina/Networking/ClientAPI.swift` | dipende da dove lo pubblichi |
 | Mettere il backend dietro HTTPS | il tuo hosting | dipende dall'hosting |
 | Generare il progetto Xcode | `cd ios && xcodegen generate` | il `.xcodeproj` non è versionato di proposito |
@@ -207,7 +210,7 @@ La lista completa, con la spunta da fare prima di archiviare, è in
 | [SYNC.md](docs/SYNC.md) | come iPhone e iPad restano allineati |
 | [SICUREZZA.md](docs/SICUREZZA.md) | cosa è protetto e come |
 | [DEPLOYMENT.md](docs/DEPLOYMENT.md) | sviluppo, staging, produzione, backup |
-| [APP_STORE.md](docs/APP_STORE.md) | pubblicare l'app |
+| [APP_STORE.md](docs/APP_STORE.md) | pubblicare l'app — **facoltativo**, serve solo il giorno che vorrai metterla sull'App Store |
 | [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | gli errori che capitano davvero |
 
 ---
