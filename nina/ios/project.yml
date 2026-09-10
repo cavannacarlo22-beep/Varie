@@ -144,6 +144,11 @@ targets:
       path: NinaWidgets/Info.plist
       properties:
         CFBundleDisplayName: Nina
+        # Devono corrispondere a quelle dell'app che contiene l'estensione,
+        # altrimenti Apple rifiuta il pacchetto. Prendendole dalle stesse
+        # variabili non possono più divergere.
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
 

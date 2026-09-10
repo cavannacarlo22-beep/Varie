@@ -144,7 +144,11 @@ jobs:
 
       # Da qui in poi è tutto in più: se qualcosa non riesce, la compilazione
       # resta comunque verde. Serve a vedere l'app, non a validarla.
+      # `if: always()` di proposito: se l'app si costruisce, le schermate si
+      # possono fotografare anche quando un test è rosso. Un test che fallisce
+      # non è una ragione per restare senza immagini.
       - name: Avvia l'app e fai gli screenshot
+        if: always()
         continue-on-error: true
         run: |
           UDID="${{ steps.simulatore.outputs.udid }}"

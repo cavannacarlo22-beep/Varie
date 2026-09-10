@@ -21,9 +21,10 @@ final class VoceDiNinaTests: XCTestCase {
     }
 
     /// Tutte le frasi che ogni generatore può produrre, raccolte chiamandolo
-    /// molte volte. La scelta è casuale, quindi 300 giri sono abbondanti per
-    /// vedere tutte le varianti di elenchi che ne hanno al massimo sei.
-    private func repertorio(_ genera: () -> String, giri: Int = 300) -> Set<String> {
+    /// molte volte. La scelta è casuale: con 120 estrazioni la probabilità di
+    /// non vedere una variante di un elenco da dieci è circa tre su un
+    /// milione. Erano 300, ma l'intera suite ci metteva nove minuti.
+    private func repertorio(_ genera: () -> String, giri: Int = 120) -> Set<String> {
         Set((0..<giri).map { _ in genera() })
     }
 
@@ -147,14 +148,37 @@ final class VoceDiNinaTests: XCTestCase {
 
     // MARK: - Il conteggio compare nel testo
 
-    func testLeFrasiSulleCoseRimasteDiconoQuante() {
-        for quante in [2, 3, 5, 12] {
-            for _ in 0..<20 {
-                XCTAssertTrue(
-                    VoceDiNina.rimaste(quante).contains("\(quante)"),
-                    "il numero \(quante) non compare"
-                )
+    func testQuandoDiceUnNumeroEQuelloGiusto() {
+        // Questo test è nato sbagliato: pretendeva che *ogni* frase citasse il
+        // numero. Ma «Oggi la lista è lunga. Partiamo dalla prima.» esiste
+        // apposta per non dirlo — quando le cose sono tante, sbatterle in
+        // faccia non aiuta nessuno.
+        //
+        // La promessa vera è più stretta e più utile: se un numero compare,
+        // è quello giusto. Una frase che dicesse «ancora 3 cose» quando sono
+        // sette sarebbe un difetto grave; una che non le conta affatto, no.
+        for quante in [1, 2, 3, 5, 12, 30] {
+            for _ in 0..<40 {
+                let frase = VoceDiNina.rimaste(quante)
+                for gruppo in frase.split(whereSeparator: { !$0.isNumber }) {
+                    XCTAssertEqual(
+                        Int(gruppo), quante,
+                        "«\(frase)» cita un numero diverso da \(quante)"
+                    )
+                }
             }
+        }
+    }
+
+    func testAlmenoUnaVarianteIlNumeroLoDice() {
+        // L'altra metà: se nessuna variante lo citasse mai, l'informazione
+        // utile andrebbe persa e resterebbero solo incoraggiamenti generici.
+        for quante in [2, 3, 5, 12] {
+            let frasi = Set((0..<200).map { _ in VoceDiNina.rimaste(quante) })
+            XCTAssertTrue(
+                frasi.contains { $0.contains("\(quante)") },
+                "nessuna delle varianti per \(quante) cose dice quante sono"
+            )
         }
     }
 
