@@ -31,6 +31,10 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 40
 
+    # Serve al passo che riporta le schermate dentro il repository.
+    permissions:
+      contents: write
+
     defaults:
       run:
         working-directory: nina/ios
@@ -178,6 +182,43 @@ jobs:
           xcrun simctl ui "$UDID" appearance light || true
 
           ls -la ../../schermate
+
+      # Le schermate vengono anche committate, non solo allegate al workflow.
+      #
+      # Due ragioni. Gli allegati si scaricano da un dominio che non tutte le
+      # reti raggiungono, e soprattutto: nel repository si guardano dal
+      # telefono, aprendo GitHub, senza scaricare niente.
+      #
+      # Non innesca un giro infinito: questo workflow parte solo per modifiche
+      # sotto nina/ios, e le immagini finiscono in nina/schermate. In più
+      # GitHub non riavvia i workflow per i commit fatti con il token
+      # automatico.
+      - name: Salva le schermate nel repository
+        if: always()
+        continue-on-error: true
+        working-directory: .
+        run: |
+          if [ -z "$(ls -A schermate 2>/dev/null)" ]; then
+            echo "Nessuna schermata da salvare."
+            exit 0
+          fi
+
+          mkdir -p nina/schermate
+          cp schermate/*.png nina/schermate/
+
+          git config user.name "Mac di GitHub"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add nina/schermate
+
+          if git diff --cached --quiet; then
+            echo "Le schermate non sono cambiate."
+            exit 0
+          fi
+
+          git commit -m "Schermate dal simulatore, $(date -u '+%d/%m/%Y %H:%M') UTC"
+          git pull --rebase --autostash origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+          echo "Salvate in nina/schermate/"
 
       - name: Raccogli gli screenshot
         if: always()
