@@ -58,7 +58,17 @@ enum Palette {
     static let testoTenue = adaptive(light: 0xB88A9A, dark: 0xB08D9B)
 
     /// Testo su fondo rosa pieno.
-    static let testoSuRosa = Color.white
+    ///
+    /// Non è bianco e basta, ed è il motivo per cui questa riga ha un commento
+    /// lungo. In modalità scura il rosa si schiarisce — deve, altrimenti su
+    /// fondo quasi nero sparirebbe — e il bianco sopra un rosa chiaro arriva a
+    /// 2,6:1 di contrasto: sotto il minimo perfino per il testo grande. La
+    /// scritta «Avanti» c'era, ma si leggeva male.
+    ///
+    /// Quindi il colore si gira: bianco sul rosa profondo del tema chiaro,
+    /// prugna scura sul rosa acceso di quello scuro. È la stessa scelta che fa
+    /// iOS con i suoi bottoni colorati, e porta il contrasto a 6,3:1.
+    static let testoSuRosa = adaptive(light: 0xFFFFFF, dark: 0x2E1D24)
 
     // MARK: - Semantici
     //
@@ -114,9 +124,20 @@ enum Palette {
     // MARK: - Gradienti
 
     /// Gradiente d'accento per le superfici grandi.
+    /// Il gradiente delle superfici piene: bottoni, spunte, giorni selezionati.
+    ///
+    /// Nel tema chiaro il rosa è un filo più profondo di `rosaChiaro`/`rosa`:
+    /// sul rosa originale il bianco stava a 2,2:1, e nemmeno le lettere grandi
+    /// reggevano. Affiancando i due si nota; guardando l'app, no.
+    ///
+    /// Nel tema scuro succede l'opposto — la superficie resta accesa, perché
+    /// sopra ci va la prugna scura di `testoSuRosa`.
     static var gradienteRosa: LinearGradient {
         LinearGradient(
-            colors: [rosaChiaro, rosa],
+            colors: [
+                adaptive(light: 0xEF89A9, dark: 0xE87FA3),
+                adaptive(light: 0xD9527F, dark: 0xFF9DBB),
+            ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )

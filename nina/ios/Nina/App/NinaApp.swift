@@ -20,6 +20,14 @@ struct NinaApp: App {
             Sessione.azzeraStatoPerTest()
         }
 
+        // Serve alle fotografie automatiche: senza, l'app si ferma alla prima
+        // schermata dell'onboarding e la schermata di accesso non si vede mai,
+        // perché nessuno può toccare «Avanti» su un simulatore comandato da
+        // uno script.
+        if ProcessInfo.processInfo.arguments.contains("-ninaOnboardingVisto") {
+            UserDefaults.standard.set(true, forKey: "onboarding-visto")
+        }
+
         let deposito = Deposito.condiviso
         let sync = MotoreSync(deposito: deposito)
         let sessione = Sessione(deposito: deposito, sync: sync)

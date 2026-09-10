@@ -151,6 +151,10 @@ jobs:
       # `if: always()` di proposito: se l'app si costruisce, le schermate si
       # possono fotografare anche quando un test è rosso. Un test che fallisce
       # non è una ragione per restare senza immagini.
+      # Da qui in poi è tutto in più: se qualcosa non riesce, la compilazione
+      # resta comunque verde. Serve a vedere l'app, non a validarla.
+      # `if: always()`: se l'app si costruisce, le schermate si possono
+      # fotografare anche quando un test è rosso.
       - name: Avvia l'app e fai gli screenshot
         if: always()
         continue-on-error: true
@@ -169,17 +173,27 @@ jobs:
             --cellularMode active --cellularBars 4 --wifiMode active --wifiBars 3 || true
 
           xcrun simctl install "$UDID" "$APP"
-          xcrun simctl launch "$UDID" it.nina.app
-
           mkdir -p ../../schermate
-          sleep 8
-          xcrun simctl io "$UDID" screenshot ../../schermate/1-avvio.png
 
-          # Modalità scura: è metà del lavoro sul design, va vista.
-          xcrun simctl ui "$UDID" appearance dark || true
-          sleep 3
-          xcrun simctl io "$UDID" screenshot ../../schermate/2-scuro.png
-          xcrun simctl ui "$UDID" appearance light || true
+          # Una schermata, nei due temi. Il simulatore si comanda da script e
+          # nessuno può toccare lo schermo: per arrivare oltre la prima
+          # schermata si riavvia l'app con un argomento diverso.
+          fotografa() {
+            nome="$1"; shift
+            xcrun simctl terminate "$UDID" it.nina.app 2>/dev/null || true
+            xcrun simctl ui "$UDID" appearance light || true
+            xcrun simctl launch "$UDID" it.nina.app "$@"
+            sleep 7
+            xcrun simctl io "$UDID" screenshot "../../schermate/$nome.png"
+
+            xcrun simctl ui "$UDID" appearance dark || true
+            sleep 3
+            xcrun simctl io "$UDID" screenshot "../../schermate/$nome-scuro.png"
+            xcrun simctl ui "$UDID" appearance light || true
+          }
+
+          fotografa "1-benvenuto" -ninaAzzera
+          fotografa "2-accesso"   -ninaAzzera -ninaOnboardingVisto
 
           ls -la ../../schermate
 
