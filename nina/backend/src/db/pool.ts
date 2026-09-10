@@ -33,11 +33,51 @@ types.setTypeParser(1700, (value: string) => value);
 // e un utente dovrebbe fare novemila miliardi di modifiche per avvicinarsi.
 types.setTypeParser(20, (value: string) => Number.parseInt(value, 10));
 
+/**
+ * Decide la configurazione TLS e restituisce la stringa ripulita.
+ *
+ * Il punto delicato: `pg` legge il parametro `sslmode` *dentro* la stringa di
+ * connessione e quello che ne ricava ha la precedenza sull'opzione `ssl`
+ * passata qui sotto. Quindi la riga «se è localhost niente TLS» non bastava:
+ * una stringa copiata da Neon e riusata in locale finiva comunque per provare
+ * una connessione cifrata contro un PostgreSQL che non ne ha una, e falliva
+ * con «self-signed certificate».
+ *
+ * Togliamo `sslmode` dalla stringa e decidiamo qui, in un posto solo. Come
+ * effetto secondario il comportamento non cambierà quando `pg` 9 modificherà
+ * il significato di `sslmode=require`: quel parametro non lo passiamo più.
+ */
+export function connessione(url: string): { stringa: string; ssl: false | { rejectUnauthorized: boolean } } {
+  let indirizzo: URL;
+  try {
+    indirizzo = new URL(url);
+  } catch {
+    // Stringa non analizzabile: la passiamo com'è e lasciamo che sia `pg` a
+    // dire cosa non va, con il suo messaggio che è più preciso del nostro.
+    return { stringa: url, ssl: { rejectUnauthorized: true } };
+  }
+
+  // Per un indirizzo IPv6 `URL.hostname` conserva le parentesi quadre
+  // («[::1]»), quindi vanno tolte prima di confrontare.
+  const host = indirizzo.hostname.replace(/^\[|\]$/g, '');
+  const inLocale = host === 'localhost' || host === '127.0.0.1' || host === '::1';
+
+  for (const parametro of ['sslmode', 'ssl', 'uselibpqcompat']) {
+    indirizzo.searchParams.delete(parametro);
+  }
+
+  // In locale nessun TLS; ovunque altro TLS con verifica del certificato.
+  // `rejectUnauthorized: false` non compare in questo file di proposito: è la
+  // riga che trasforma una connessione cifrata in una connessione cifrata
+  // *verso chiunque*, ed è il modo più comune di rendere inutile il TLS.
+  return { stringa: indirizzo.toString(), ssl: inLocale ? false : { rejectUnauthorized: true } };
+}
+
+const { stringa: stringaConnessione, ssl } = connessione(config.database.url);
+
 export const pool = new Pool({
-  connectionString: config.database.url,
-  ssl: config.database.url.includes('localhost') || config.database.url.includes('127.0.0.1')
-    ? false
-    : { rejectUnauthorized: true },
+  connectionString: stringaConnessione,
+  ssl,
   max: config.database.maxConnections,
   idleTimeoutMillis: config.database.idleTimeoutMs,
   connectionTimeoutMillis: config.database.connectionTimeoutMs,

@@ -13,6 +13,10 @@ Per la parte "creo il database e lo collego" vai su
 
 ## Avvio rapido
 
+Il percorso più corto è `../avvia.sh`, che fa tutti i passi qui sotto in un
+comando solo e genera i segreti da sé. Questa sezione serve a chi vuole
+capire cosa succede, o a chi deve rifare un pezzo singolo.
+
 ```bash
 cd backend
 cp .env.example .env      # poi compila DATABASE_URL e i due segreti

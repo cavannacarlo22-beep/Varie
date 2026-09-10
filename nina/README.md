@@ -81,10 +81,33 @@ Tutto il resto in [docs/SICUREZZA.md](docs/SICUREZZA.md).
 
 ## Partire da zero
 
-### 1. Il database e il backend
+### 1. Il database
 
-Segui [docs/NEON_SETUP.md](docs/NEON_SETUP.md) — dieci passi, scritti per chi
-non ha mai usato un database. In sintesi:
+Serve un account Neon e la stringa di connessione: dieci minuti, gratis, e si
+fa anche dal telefono. I passi sono in [docs/NEON_SETUP.md](docs/NEON_SETUP.md),
+scritti per chi non ha mai usato un database.
+
+### 2. Tutto il resto, con un comando
+
+```bash
+cd nina
+./avvia.sh
+```
+
+Lo script controlla che ci siano Node e npm, prepara il file della
+configurazione, **genera i due segreti al posto tuo**, installa le librerie,
+crea le tabelle, crea l'account amministratore e accende il backend. Se trova
+XcodeGen genera anche il progetto Xcode.
+
+Chiede una cosa sola: la stringa di connessione del passo precedente — e non la
+mostra a schermo mentre la incolli, perché contiene una password e il terminale
+tiene una cronologia.
+
+Si può rieseguire quante volte si vuole: ogni passo salta da solo se è già
+fatto, e non sovrascrive mai un file `.env` esistente.
+
+<details>
+<summary>Preferisci fare i passi a mano?</summary>
 
 ```bash
 cd backend
@@ -94,12 +117,15 @@ npm run migrate
 npm run create-admin      # la password si digita qui, non sta in nessun file
 npm run dev
 ```
+</details>
 
 Verifica: `curl http://localhost:3000/health` deve rispondere
 `{"status":"ok",...}`.
 La documentazione interattiva delle API è su http://localhost:3000/docs.
 
-### 2. L'app
+### 3. L'app
+
+Se `avvia.sh` non ha trovato XcodeGen:
 
 ```bash
 brew install xcodegen     # una volta sola
@@ -112,10 +138,10 @@ Poi `⌘R` sul simulatore. In `DEBUG` l'app punta a `http://localhost:3000`; per
 provarla su un iPhone vero serve l'IP del Mac sulla stessa rete Wi-Fi — vedi
 `ios/Nina/Networking/ClientAPI.swift`.
 
-### 3. I test
+### 4. I test
 
 ```bash
-cd backend && npm test    # 95 test, su un PostgreSQL vero
+cd backend && npm test    # 104 test, su un PostgreSQL vero
 ```
 
 In Xcode, `⌘U` per i test dell'app.
@@ -140,7 +166,7 @@ manuali.
   (404) a tutti gli altri.
 - `create-admin` guidato da un terminale finto, per verificare che la password
   non compaia mai a schermo e che le password deboli vengano rifiutate.
-- 95 test automatici del backend, tutti verdi.
+- 104 test automatici del backend, tutti verdi.
 
 ### Non verificato
 
