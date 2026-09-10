@@ -14,7 +14,7 @@ struct SchermataAbitudini: View {
     @Environment(Deposito.self) private var deposito
 
     @Query(filter: #Predicate<Abitudine> { $0.deletedAt == nil },
-           sort: [SortDescriptor(\Abitudine.ordine), SortDescriptor(\Abitudine.createdAt)])
+           sort: [SortDescriptor<Abitudine>(\.ordine), SortDescriptor<Abitudine>(\.createdAt)])
     private var abitudini: [Abitudine]
 
     @Query(filter: #Predicate<CompletamentoAbitudine> { $0.deletedAt == nil && $0.fatta })

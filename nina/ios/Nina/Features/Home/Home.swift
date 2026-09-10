@@ -20,11 +20,11 @@ struct Home: View {
     @Environment(MotoreSync.self) private var sync
 
     @Query(filter: #Predicate<Attivita> { $0.deletedAt == nil },
-           sort: [SortDescriptor(\Attivita.ora), SortDescriptor(\Attivita.createdAt)])
+           sort: [SortDescriptor<Attivita>(\.ora), SortDescriptor<Attivita>(\.createdAt)])
     private var tutteLeAttivita: [Attivita]
 
     @Query(filter: #Predicate<Abitudine> { $0.deletedAt == nil },
-           sort: [SortDescriptor(\Abitudine.ordine)])
+           sort: [SortDescriptor<Abitudine>(\.ordine)])
     private var abitudini: [Abitudine]
 
     @State private var frase: Frase?

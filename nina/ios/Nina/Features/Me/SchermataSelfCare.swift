@@ -16,7 +16,7 @@ struct SchermataSelfCare: View {
     @Environment(Deposito.self) private var deposito
 
     @Query(filter: #Predicate<IdeaSelfCare> { $0.attiva },
-           sort: [SortDescriptor(\IdeaSelfCare.titolo)])
+           sort: [SortDescriptor<IdeaSelfCare>(\.titolo)])
     private var idee: [IdeaSelfCare]
 
     @State private var scelta: IdeaSelfCare?

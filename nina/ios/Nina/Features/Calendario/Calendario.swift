@@ -26,7 +26,7 @@ struct Calendario: View {
     @Environment(Deposito.self) private var deposito
 
     @Query(filter: #Predicate<Attivita> { $0.deletedAt == nil },
-           sort: [SortDescriptor(\Attivita.ora)])
+           sort: [SortDescriptor<Attivita>(\.ora)])
     private var attivita: [Attivita]
 
     @State private var vista: Vista = .mese

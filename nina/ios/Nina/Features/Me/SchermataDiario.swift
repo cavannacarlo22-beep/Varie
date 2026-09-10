@@ -17,8 +17,8 @@ struct SchermataDiario: View {
     @Environment(Deposito.self) private var deposito
 
     @Query(filter: #Predicate<PaginaDiario> { $0.deletedAt == nil },
-           sort: [SortDescriptor(\PaginaDiario.giorno, order: .reverse),
-                  SortDescriptor(\PaginaDiario.createdAt, order: .reverse)])
+           sort: [SortDescriptor<PaginaDiario>(\.giorno, order: .reverse),
+                  SortDescriptor<PaginaDiario>(\.createdAt, order: .reverse)])
     private var pagine: [PaginaDiario]
 
     @State private var ricerca = ""

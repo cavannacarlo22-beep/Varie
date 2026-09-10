@@ -14,7 +14,7 @@ struct SchermataWishlist: View {
     @Environment(Deposito.self) private var deposito
 
     @Query(filter: #Predicate<Desiderio> { $0.deletedAt == nil },
-           sort: [SortDescriptor(\Desiderio.createdAt, order: .reverse)])
+           sort: [SortDescriptor<Desiderio>(\.createdAt, order: .reverse)])
     private var desideri: [Desiderio]
 
     @State private var mostraNuovo = false

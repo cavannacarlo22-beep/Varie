@@ -21,7 +21,7 @@ struct SchermataAmica: View {
     @Environment(Sessione.self) private var sessione
 
     @Query(filter: #Predicate<MessaggioAmica> { $0.deletedAt == nil },
-           sort: [SortDescriptor(\MessaggioAmica.createdAt)])
+           sort: [SortDescriptor<MessaggioAmica>(\.createdAt)])
     private var messaggi: [MessaggioAmica]
 
     @State private var testo = ""

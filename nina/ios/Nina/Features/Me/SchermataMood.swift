@@ -14,7 +14,7 @@ struct SchermataMood: View {
     @Environment(Deposito.self) private var deposito
 
     @Query(filter: #Predicate<Umore> { $0.deletedAt == nil },
-           sort: [SortDescriptor(\Umore.giorno, order: .reverse)])
+           sort: [SortDescriptor<Umore>(\.giorno, order: .reverse)])
     private var umori: [Umore]
 
     @State private var scelto: MoodKind?
