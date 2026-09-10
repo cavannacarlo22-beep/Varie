@@ -179,7 +179,7 @@ struct Home: View {
 
     private var sezioneOggi: some View {
         VStack(alignment: .leading, spacing: Spazio.normale) {
-            IntestazioneSezione(titolo: "Oggi") {
+            IntestazioneSezione("Oggi") {
                 Button {
                     mostraNuovaAttivita = true
                 } label: {
@@ -243,7 +243,7 @@ struct Home: View {
 
     private var strisciaAbitudini: some View {
         VStack(alignment: .leading, spacing: Spazio.normale) {
-            IntestazioneSezione(titolo: "Le mie abitudini") {
+            IntestazioneSezione("Le mie abitudini") {
                 NavigationLink {
                     SchermataAbitudini()
                 } label: {

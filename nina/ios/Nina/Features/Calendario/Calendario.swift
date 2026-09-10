@@ -189,7 +189,7 @@ struct Calendario: View {
 
         return VStack(alignment: .leading, spacing: Spazio.normale) {
             IntestazioneSezione(
-                titolo: CalendarioNina.testoRelativo(giornoSelezionato),
+                CalendarioNina.testoRelativo(giornoSelezionato),
                 sottotitolo: delGiorno.isEmpty ? nil : "\(delGiorno.count) cose"
             ) {
                 Button {

@@ -134,7 +134,7 @@ struct SchermataSelfCare: View {
     private var elenco: some View {
         VStack(alignment: .leading, spacing: Spazio.medio) {
             IntestazioneSezione(
-                titolo: "Tutte le idee",
+                "Tutte le idee",
                 sottotitolo: filtrate.isEmpty ? nil : "\(filtrate.count) cose che puoi fare per te"
             )
 

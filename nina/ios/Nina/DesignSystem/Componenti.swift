@@ -125,6 +125,19 @@ struct IntestazioneSezione<Azione: View>: View {
     var sottotitolo: String?
     @ViewBuilder var azione: Azione
 
+    /// Il titolo è sempre il primo argomento e non ha etichetta.
+    ///
+    /// Questo `init` esiste per togliere di mezzo quello sintetizzato da
+    /// Swift, che avrebbe voluto `titolo:`. Averne due significava poterla
+    /// scrivere in due modi — con l'etichetta quando c'era un bottone in
+    /// coda, senza quando non c'era — e la differenza non è visibile finché
+    /// il compilatore non la segnala. È già successo una volta.
+    init(_ titolo: String, sottotitolo: String? = nil, @ViewBuilder azione: () -> Azione) {
+        self.titolo = titolo
+        self.sottotitolo = sottotitolo
+        self.azione = azione()
+    }
+
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             VStack(alignment: .leading, spacing: 2) {
@@ -140,8 +153,9 @@ struct IntestazioneSezione<Azione: View>: View {
 }
 
 extension IntestazioneSezione where Azione == EmptyView {
+    /// La stessa cosa, quando non c'è niente da mettere a destra.
     init(_ titolo: String, sottotitolo: String? = nil) {
-        self.init(titolo: titolo, sottotitolo: sottotitolo) { EmptyView() }
+        self.init(titolo, sottotitolo: sottotitolo) { EmptyView() }
     }
 }
 

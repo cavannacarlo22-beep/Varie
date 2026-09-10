@@ -143,7 +143,7 @@ struct SchermataMood: View {
         let nelPeriodo = umori.filter { $0.giorno >= da }
 
         return VStack(alignment: .leading, spacing: Spazio.normale) {
-            IntestazioneSezione(titolo: "Come è andata") {
+            IntestazioneSezione("Come è andata") {
                 Picker("Periodo", selection: $periodo) {
                     ForEach(Periodo.allCases) { valore in
                         Text(valore.etichetta).tag(valore)
