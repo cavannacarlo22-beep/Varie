@@ -1,5 +1,9 @@
 # UI/UX Pro Max — installazione e uso in qualsiasi cartella
 
+> **Novità:** nella cartella [`petalo/`](petalo/README.md) c'è **Petalo**, il
+> gestionale personale e universitario (agenda, quaderni con 300+ font, liste,
+> calcoli, archivio). Istruzioni d'uso e pubblicazione in `petalo/README.md`.
+>
 > **Nota:** questo repository contiene anche il **sito vetrina di Carlo Cavanna**
 > (`index.html` + `assets/`), sul branch `claude/carlo-cavanna-showcase-site-dcc7ra`.
 > Per pubblicarlo online leggi **[DEPLOY.md](DEPLOY.md)**.
