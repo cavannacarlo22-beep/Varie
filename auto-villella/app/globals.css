@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0b0b0c;
+  --color-coal: #151517;
+  --color-graphite: #232326;
+  --color-steel: #6e6e74;
+  --color-mist: #a9a9ae;
+  --color-line: #e3e1dd;
+  --color-paper: #f4f3f0;
+  --color-red: #d20f1e;
+  --color-red-dark: #a10a15;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); }
+  ::selection { background: var(--color-red); color: white; }
+  :focus-visible { outline: 2px solid var(--color-red); outline-offset: 2px; }
+}
+
+@utility display {
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+@utility eyebrow {
+  font-stretch: 112%;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* La firma del logo: linea bianca – tratto rosso – linea bianca */
+@utility signature {
+  position: relative;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, currentColor 12%, currentColor 38%, transparent 38%, transparent 39.5%, var(--color-red) 39.5%, var(--color-red) 60.5%, transparent 60.5%, transparent 62%, currentColor 62%, currentColor 88%, transparent);
+}
+
+/* Taglio diagonale che riprende il tetto della "A" */
+@utility cut-bottom {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4vw), 0 100%);
+}
+
+@utility tabular { font-variant-numeric: tabular-nums; }
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 px-5 h-12 text-sm font-semibold uppercase tracking-wider transition-colors disabled:opacity-60; font-stretch: 112%; }
+  .btn-red { @apply btn bg-red text-white hover:bg-red-dark; }
+  .btn-dark { @apply btn bg-ink text-white hover:bg-graphite; }
+  .btn-ghost { @apply btn border border-current hover:bg-white/10; }
+  .field { @apply w-full h-12 px-4 bg-white border border-line text-ink placeholder:text-steel/70 focus:border-ink focus:outline-none; }
+  .field-dark { @apply w-full h-12 px-4 bg-coal border border-graphite text-white placeholder:text-mist/60 focus:border-white focus:outline-none; }
+  .label { @apply block text-xs font-semibold uppercase tracking-wider text-steel mb-1.5; }
+}
